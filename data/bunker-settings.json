@@ -1,0 +1,5 @@
+[
+  {"size": "большой", "resources": "минимум", "duration": "5 лет", "places": 10},
+  {"size": "средний", "resources": "нормально", "duration": "10 лет", "places": 15},
+  ...
+]
