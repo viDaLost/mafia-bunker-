@@ -122,7 +122,7 @@
     <div id="playerList" class="card-grid"></div>
   </div>
 
-  <!-- Кнопки всегда внизу -->
+  <!-- ЕДИНСТВЕННЫЕ КНОПКИ на всю страницу -->
   <div class="footer-buttons">
     <button onclick="goToMenu()">Главное меню</button>
     <button onclick="restartGame()">В начало игры</button>
@@ -172,8 +172,6 @@
       let html = `<h3>Ваша роль:</h3>`;
       html += `<strong>Роль:</strong> ${char.role}<br/><br/>`;
       html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
-      html += `<button onclick="goToMenu()">Главное меню</button>`;
-      html += `<button onclick="restartGame()">В начало игры</button>`;
 
       document.getElementById("roleCard").innerHTML = html;
       document.getElementById("roleCard").style.display = "block";
