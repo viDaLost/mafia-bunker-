@@ -1,4 +1,4 @@
-/* Общие стили для всех страниц, кроме главного меню */
+/* === Стили ТОЛЬКО для игр === */
 
 input[type="number"] {
   font-size: 18px;
@@ -16,7 +16,7 @@ input[type="number"] {
 }
 
 /* Кнопки */
-button {
+.game-button {
   display: block;
   margin: 15px auto;
   background: transparent;
@@ -29,7 +29,7 @@ button {
   transition: all 0.3s ease;
 }
 
-button:hover {
+.game-button:hover {
   background: #ff0033;
   color: black;
 }
