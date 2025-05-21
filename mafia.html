@@ -63,9 +63,7 @@
       const doctorCount = parseInt(document.getElementById("doctorCount").value);
       const maniacCount = parseInt(document.getElementById("maniacCount").value);
 
-      // Создаем список ролей
       let roles = [];
-
       for (let i = 0; i < mafiaCount; i++) roles.push("мафия");
       for (let i = 0; i < sheriffCount; i++) roles.push("комиссар");
       for (let i = 0; i < doctorCount; i++) roles.push("доктор");
@@ -75,7 +73,6 @@
         roles.push("мирный житель");
       }
 
-      // Перемешиваем
       roles.sort(() => Math.random() - 0.5);
       players = roles.map(role => ({role, revealed: false}));
       localStorage.setItem("mafiaPlayers", JSON.stringify(players));
@@ -91,7 +88,7 @@
 
       const char = chars[currentCharacterIndex];
       let html = `<h3>Ваша роль:</h3>`;
-      html += `<strong>Роль:</strong> ${char.role}<br/><br/>`;
+      html += `<span class="label">Роль:</span> ${char.role}<br/><br/>`;
       html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
       html += `<button onclick="goToMenu()">Главное меню</button>`;
       html += `<button onclick="restartGame()">В начало игры</button>`;
@@ -119,7 +116,6 @@
 
       const listDiv = document.getElementById("playerList");
       listDiv.innerHTML = "";
-
       players.forEach((p, i) => {
         const btn = document.createElement("button");
         btn.innerText = `Игрок ${i + 1}`;
@@ -131,7 +127,7 @@
     function showFullRole(index) {
       const p = players[index];
       let html = `<h3>Роль игрока ${index + 1}:</h3>`;
-      html += `<strong>Роль:</strong> ${p.role}<br/><br/>`;
+      html += `<span class="label">Роль:</span> ${p.role}<br/><br/>`;
       html += `<button onclick="goToMenu()">Главное меню</button>`;
       html += `<button onclick="restartGame()">В начало игры</button>`;
       document.getElementById("allCardsShown").innerHTML = html;
