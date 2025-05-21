@@ -150,7 +150,15 @@
     <div id="playerList" class="card-grid"></div>
   </div>
 
-  <!-- ЕДИНСТВЕННЫЕ кнопки "Главное меню" и "В начало игры" -->
+  <!-- Всплывающая карточка -->
+  <div id="overlay" class="overlay">
+    <div class="overlay-content" id="overlayContent">
+      <div id="overlayCharacterData"></div>
+      <button onclick="closeOverlay(this)">Закрыть карточку</button>
+    </div>
+  </div>
+
+  <!-- ЕДИНСТВЕННЫЕ кнопки внизу -->
   <div class="footer-buttons">
     <button onclick="goToMenu()">Главное меню</button>
     <button onclick="restartGame()">В начало игры</button>
@@ -289,6 +297,7 @@
         existingOverlay.classList.remove("show");
         existingOverlay.style.display = "none";
         existingOverlay.remove();
+        return;
       }
 
       const overlay = document.createElement("div");
