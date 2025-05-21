@@ -126,7 +126,7 @@
 
       const char = chars[currentCharacterIndex];
       let html = `<h3>Ваша роль:</h3>`;
-      html += `<strong>Роль:</strong> ${char.role}<br/><br/>`;
+      html += `<span class="label">Роль:</span> ${char.role}<br/><br/>`;
       html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
 
       document.getElementById("roleCard").innerHTML = html;
