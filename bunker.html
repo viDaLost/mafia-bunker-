@@ -20,8 +20,8 @@
   <!-- Шаг 2: Катастрофа и описание бункера -->
   <div id="disasterInfo" style="display: none;">
     <h2>Катастрофа произошла!</h2>
-    <div id="disasterText"></div>
-    <div id="bunkerText"></div>
+    <div class="disaster-info" id="disasterText"></div>
+    <div class="bunker-info" id="bunkerText"></div>
     <button onclick="showPlayerCard()">Показать карточку игрока</button>
     <button onclick="goToMenu()">Главное меню</button>
     <button onclick="restartGame()">В начало игры</button>
@@ -81,7 +81,7 @@
 
       document.getElementById("setup").style.display = "none";
 
-      // Формируем текст бункера
+      // Формируем текст катастрофы и бункера
       const area = getRandom([
         "Площадь бункера — 50 квадратных метров, бункер одноэтажный, местонахождение: подземелье",
         "Площадь бункера — 80 квадратных метров, бункер одноэтажный, местонахождение: горы",
@@ -92,14 +92,11 @@
 
       const randomSupplies = getRandomMultiple(supplies, 2, 4).join(', ');
 
-      // Формируем текст катастрофы и бункера
       document.getElementById("disasterText").innerHTML = `<strong>Катастрофа:</strong> ${disaster.type} — ${disaster.description}`;
       document.getElementById("bunkerText").innerHTML = `
         <strong>Условия бункера:</strong><br/>
         ${area}<br/>
-        Ресурсы: ${bunkerSetting.resources}<br/>
         Продолжительность: ${bunkerSetting.duration}<br/>
-        Мест: ${bunkerSetting.places}<br/>
         Припасы: ${randomSupplies}<br/><br/>
         <strong>Раунды:</strong><br/>
         Игроков всего: ${total}<br/>
@@ -112,7 +109,7 @@
 
     function showPlayerCard() {
       document.getElementById("disasterInfo").style.display = "none";
-      document.getElementById("playerNumber").innerText = `Игрок №1`;
+      document.getElementById("playerNumber").innerText = `Игрок №${currentCharacterIndex + 1}`;
       document.getElementById("playerCardContainer").style.display = "block";
     }
 
@@ -122,14 +119,14 @@
 
       const char = chars[currentCharacterIndex];
       let html = `<h3>Карточка игрока ${currentCharacterIndex + 1}:</h3>`;
-      html += `<strong>Профессия:</strong> ${char.profession}<br/><br/>`;
-      html += `<strong>Здоровье:</strong> ${char.health}<br/><br/>`;
-      html += `<strong>Фобия:</strong> ${char.phobia}<br/><br/>`;
-      html += `<strong>Хобби / Навыки:</strong> ${char.skill}<br/><br/>`;
-      html += `<strong>Инвентарь:</strong> ${char.inventory}<br/><br/>`;
-      html += `<strong>Личностные качества:</strong> ${char.quality}<br/><br/>`;
-      html += `<strong>Биография:</strong> ${char.biography}<br/><br/>`;
-      html += `<strong>Секрет:</strong> ${char.secret}<br/><br/>`;
+      html += `<span class="label">Профессия:</span> ${char.profession}<br/>`;
+      html += `<span class="label">Здоровье:</span> ${char.health}<br/>`;
+      html += `<span class="label">Фобия:</span> ${char.phobia}<br/>`;
+      html += `<span class="label">Хобби / Навыки:</span> ${char.skill}<br/>`;
+      html += `<span class="label">Инвентарь:</span> ${char.inventory}<br/>`;
+      html += `<span class="label">Личностные качества:</span> ${char.quality}<br/>`;
+      html += `<span class="label">Биография:</span> ${char.biography}<br/>`;
+      html += `<span class="label">Секрет:</span> ${char.secret}<br/><br/>`;
 
       html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
       html += `<button onclick="goToMenu()">Главное меню</button>`;
@@ -170,14 +167,14 @@
     function showFullCard(index) {
       const p = characters[index];
       let html = `<h3>Карточка игрока ${index + 1}:</h3>`;
-      html += `<strong>Профессия:</strong> ${p.profession}<br/><br/>`;
-      html += `<strong>Здоровье:</strong> ${p.health}<br/><br/>`;
-      html += `<strong>Фобия:</strong> ${p.phobia}<br/><br/>`;
-      html += `<strong>Хобби / Навыки:</strong> ${p.skill}<br/><br/>`;
-      html += `<strong>Инвентарь:</strong> ${p.inventory}<br/><br/>`;
-      html += `<strong>Личностные качества:</strong> ${p.quality}<br/><br/>`;
-      html += `<strong>Биография:</strong> ${p.biography}<br/><br/>`;
-      html += `<strong>Секрет:</strong> ${p.secret}<br/><br/>`;
+      html += `<span class="label">Профессия:</span> ${p.profession}<br/>`;
+      html += `<span class="label">Здоровье:</span> ${p.health}<br/>`;
+      html += `<span class="label">Фобия:</span> ${p.phobia}<br/>`;
+      html += `<span class="label">Хобби / Навыки:</span> ${p.skill}<br/>`;
+      html += `<span class="label">Инвентарь:</span> ${p.inventory}<br/>`;
+      html += `<span class="label">Личностные качества:</span> ${p.quality}<br/>`;
+      html += `<span class="label">Биография:</span> ${p.biography}<br/>`;
+      html += `<span class="label">Секрет:</span> ${p.secret}<br/><br/>`;
       html += `<button onclick="goToMenu()">Главное меню</button>`;
       html += `<button onclick="restartGame()">В начало игры</button>`;
       document.getElementById("allCardsShown").innerHTML = html;
@@ -223,14 +220,11 @@
     function calculateRemoval(totalRemove, rounds) {
       const plan = new Array(rounds).fill(0);
       let remaining = totalRemove;
-
-      // Приоритет на первые раунды
       for (let i = 0; i < rounds && remaining > 0; i++) {
         const share = Math.ceil(remaining / (rounds - i));
         plan[i] = share;
         remaining -= share;
       }
-
       return plan;
     }
   </script>
