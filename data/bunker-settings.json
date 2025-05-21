@@ -1,5 +1,17 @@
 [
   {"size": "большой", "resources": "минимум", "duration": "5 лет", "places": 10},
   {"size": "средний", "resources": "нормально", "duration": "10 лет", "places": 15},
-  ...
+  {"size": "маленький", "resources": "ограниченно", "duration": "3 года", "places": 6},
+  {"size": "огромный", "resources": "максимум", "duration": "15 лет", "places": 20},
+  {"size": "подземный", "resources": "нехватка воды", "duration": "2 года", "places": 8},
+  {"size": "автономный", "resources": "полный запас", "duration": "20 лет", "places": 25},
+  {"size": "старый", "resources": "истощены", "duration": "1 год", "places": 4},
+  {"size": "современный", "resources": "возобновляемые источники", "duration": "10 лет", "places": 12},
+  {"size": "военный", "resources": "боеприпасы", "duration": "5 лет", "places": 10},
+  {"size": "космический", "resources": "ограниченный доступ", "duration": "3 года", "places": 5},
+  {"size": "морской", "resources": "рыба и вода", "duration": "7 лет", "places": 9},
+  {"size": "горный", "resources": "минералы", "duration": "15 лет", "places": 18},
+  {"size": "пустынный", "resources": "вода и еда", "duration": "2 года", "places": 6},
+  {"size": "ледяной", "resources": "ограничено", "duration": "1 год", "places": 3},
+  {"size": "в лесу", "resources": "растительность", "duration": "4 года", "places": 7}
 ]
