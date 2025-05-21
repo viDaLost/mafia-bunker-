@@ -15,15 +15,18 @@
     <button onclick="startBunker()">Начать игру</button>
   </div>
 
-  <div id="game" style="display:none;">
-    <h2>Нажмите ниже, чтобы увидеть вашу карточку</h2>
-    <button onclick="showCard()">Показать карточку</button>
-    <div id="card" class="card"></div>
-    <button onclick="showAllPlayers()">Показать всех игроков</button>
+  <div id="disasterInfo" style="display: none;">
+    <h2>Катастрофа произошла!</h2>
+    <div id="disasterText"></div>
+    <div id="bunkerText"></div>
+    <button onclick="showPlayerCard()">Показать карточку игрока</button>
   </div>
+
+  <div id="characterCard" class="card" style="display: none;"></div>
 
   <script>
     let characters = [];
+    let currentCharacterIndex = 0;
 
     async function startBunker() {
       const disasterRes = await fetch('data/disasters.json');
@@ -41,47 +44,44 @@
       const setting = getRandom(settings);
 
       document.getElementById("setup").style.display = "none";
-
-      // Генерируем персонажей
-      characters = Array.from({length: total}, () => generateCharacter(fields));
-      localStorage.setItem("bunkerCharacters", JSON.stringify(characters));
-
-      const card = document.getElementById("card");
-      card.innerHTML = `
-        <h3>Катастрофа:</h3><p>${disaster.type} — ${disaster.description}</p>
+      document.getElementById("disasterText").innerHTML = `<h3>Катастрофа:</h3><p>${disaster.type} — ${disaster.description}</p>`;
+      document.getElementById("bunkerText").innerHTML = `
         <h3>Условия бункера:</h3>
         <ul>
           <li>Размер: ${setting.size}</li>
           <li>Ресурсы: ${setting.resources}</li>
           <li>Продолжительность: ${setting.duration}</li>
           <li>Мест: ${setting.places}</li>
-        </ul>
-        <br/>
-        <button onclick="showPlayer()">Показать мою карточку</button>
-      `;
-      card.style.display = "block";
+        </ul>`;
+      document.getElementById("disasterInfo").style.display = "block";
+
+      // Генерируем персонажей
+      characters = Array.from({length: total}, () => generateCharacter(fields));
+      localStorage.setItem("bunkerCharacters", JSON.stringify(characters));
     }
 
-    function showPlayer() {
+    function showPlayerCard() {
       const chars = JSON.parse(localStorage.getItem("bunkerCharacters"));
-      const index = prompt("Введите свой номер игрока (1–" + chars.length + ")");
-      if (index > 0 && index <= chars.length) {
-        const char = chars[index - 1];
-        let html = `<h3>Ваша карточка:</h3>`;
-        for (const key in char) {
-          html += `<strong>${key}:</strong> ${char[key]}<br/><br/>`;
-        }
-        document.getElementById("card").innerHTML = html;
+      if (currentCharacterIndex >= chars.length) {
+        alert("Все игроки просмотрели свои карточки.");
+        return;
       }
+
+      const char = chars[currentCharacterIndex];
+      let html = `<h3>Ваша карточка — Игрок ${currentCharacterIndex + 1}:</h3>`;
+      for (const key in char) {
+        html += `<strong>${key}:</strong> ${char[key]}<br/><br/>`;
+      }
+      html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
+      document.getElementById("characterCard").innerHTML = html;
+      document.getElementById("characterCard").style.display = "block";
+      document.getElementById("disasterInfo").style.display = "none";
     }
 
-    function showAllPlayers() {
-      const chars = JSON.parse(localStorage.getItem("bunkerCharacters"));
-      let text = "Список игроков:\n\n";
-      chars.forEach((c, i) => {
-        text += `Игрок ${i + 1}: ${JSON.stringify(c)}\n\n`;
-      });
-      alert(text);
+    function nextPlayer() {
+      currentCharacterIndex++;
+      document.getElementById("characterCard").style.display = "none";
+      showPlayerCard();
     }
 
     function generateCharacter(fields) {
