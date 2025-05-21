@@ -15,8 +15,7 @@ input[type="number"] {
   text-align: center;
 }
 
-/* Кнопки */
-.game-button {
+button {
   display: block;
   margin: 15px auto;
   background: transparent;
@@ -29,12 +28,11 @@ input[type="number"] {
   transition: all 0.3s ease;
 }
 
-.game-button:hover {
+button:hover {
   background: #ff0033;
   color: black;
 }
 
-/* Карточки персонажей */
 .card {
   background: #1e1e1e;
   border: 1px solid #444;
