@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="bunker-bg">
+  <!-- Шаг 1: Выбор количества игроков -->
   <div id="setup">
     <h2>Игра Бункер</h2>
     <p>Введите количество игроков (до 30)</p>
@@ -16,23 +17,40 @@
     <button onclick="goToMenu()">Главное меню</button>
   </div>
 
+  <!-- Шаг 2: Катастрофа и описание бункера -->
+  <div id="disasterInfo" style="display: none;">
+    <h2>Катастрофа произошла!</h2>
+    <div id="disasterText"></div>
+    <div id="bunkerText"></div>
+    <button onclick="showPlayerCard()">Показать карточку игрока</button>
+    <button onclick="goToMenu()">Главное меню</button>
+    <button onclick="restartGame()">В начало игры</button>
+  </div>
+
+  <!-- Шаг 3: Карточка текущего игрока -->
   <div id="playerCardContainer" style="display: none;">
     <h2 id="playerNumber">Игрок №1</h2>
     <button onclick="showCurrentPlayerCard()">Показать карточку</button>
     <button onclick="goToMenu()">Главное меню</button>
+    <button onclick="restartGame()">В начало игры</button>
   </div>
 
+  <!-- Шаг 4: Отображение карточки -->
   <div id="characterCard" class="card" style="display: none;"></div>
 
+  <!-- Шаг 5: Все карточки показаны -->
   <div id="allCardsShown" style="display: none;">
     <h2>Все карточки показаны</h2>
     <div id="playerList"></div>
     <button onclick="goToMenu()">Главное меню</button>
+    <button onclick="restartGame()">В начало игры</button>
   </div>
 
   <script>
     let characters = [];
     let currentCharacterIndex = 0;
+    let disaster = {};
+    let bunkerSetting = {};
 
     async function startBunker() {
       const disasterRes = await fetch('data/disasters.json');
@@ -45,18 +63,31 @@
 
       const total = parseInt(document.getElementById("playerCount").value);
 
-      // Выбираем случайную катастрофу и условия
-      const disaster = getRandom(disasters);
-      const setting = getRandom(settings);
-
-      document.getElementById("setup").style.display = "none";
+      // Сохраняем катастрофу и условия
+      disaster = getRandom(disasters);
+      bunkerSetting = getRandom(settings);
 
       // Генерируем персонажей
       characters = Array.from({length: total}, () => generateCharacter(fields));
       localStorage.setItem("bunkerCharacters", JSON.stringify(characters));
 
-      // Показываем первого игрока
-      document.getElementById("playerNumber").innerText = `Игрок №${currentCharacterIndex + 1}`;
+      document.getElementById("setup").style.display = "none";
+
+      // Показываем катастрофу и бункер
+      document.getElementById("disasterText").innerHTML = `<strong>Катастрофа:</strong> ${disaster.type} — ${disaster.description}`;
+      document.getElementById("bunkerText").innerHTML = `
+        <strong>Условия бункера:</strong><br/>
+        Размер: ${bunkerSetting.size}<br/>
+        Ресурсы: ${bunkerSetting.resources}<br/>
+        Продолжительность: ${bunkerSetting.duration}<br/>
+        Мест: ${bunkerSetting.places}
+      `;
+      document.getElementById("disasterInfo").style.display = "block";
+    }
+
+    function showPlayerCard() {
+      document.getElementById("disasterInfo").style.display = "none";
+      document.getElementById("playerNumber").innerText = `Игрок №1`;
       document.getElementById("playerCardContainer").style.display = "block";
     }
 
@@ -77,6 +108,7 @@
 
       html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
       html += `<button onclick="goToMenu()">Главное меню</button>`;
+      html += `<button onclick="restartGame()">В начало игры</button>`;
 
       document.getElementById("characterCard").innerHTML = html;
       document.getElementById("characterCard").style.display = "block";
@@ -102,7 +134,7 @@
       const listDiv = document.getElementById("playerList");
       listDiv.innerHTML = "";
 
-      characters.forEach((char, i) => {
+      characters.forEach((p, i) => {
         const btn = document.createElement("button");
         btn.innerText = `Игрок ${i + 1}`;
         btn.onclick = () => showFullCard(i);
@@ -111,22 +143,26 @@
     }
 
     function showFullCard(index) {
-      const char = characters[index];
+      const p = characters[index];
       let html = `<h3>Карточка игрока ${index + 1}:</h3>`;
-      html += `<strong>Профессия:</strong> ${char.profession}<br/><br/>`;
-      html += `<strong>Здоровье:</strong> ${char.health}<br/><br/>`;
-      html += `<strong>Фобия:</strong> ${char.phobia}<br/><br/>`;
-      html += `<strong>Хобби / Навыки:</strong> ${char.skill}<br/><br/>`;
-      html += `<strong>Инвентарь:</strong> ${char.inventory}<br/><br/>`;
-      html += `<strong>Личностные качества:</strong> ${char.quality}<br/><br/>`;
-      html += `<strong>Биография:</strong> ${char.biography}<br/><br/>`;
-      html += `<strong>Секрет:</strong> ${char.secret}<br/><br/>`;
+      html += `<strong>Профессия:</strong> ${p.profession}<br/><br/>`;
+      html += `<strong>Здоровье:</strong> ${p.health}<br/><br/>`;
+      html += `<strong>Фобия:</strong> ${p.phobia}<br/><br/>`;
+      html += `<strong>Хобби / Навыки:</strong> ${p.skill}<br/><br/>`;
+      html += `<strong>Инвентарь:</strong> ${p.inventory}<br/><br/>`;
+      html += `<strong>Личностные качества:</strong> ${p.quality}<br/><br/>`;
+      html += `<strong>Биография:</strong> ${p.biography}<br/><br/>`;
+      html += `<strong>Секрет:</strong> ${p.secret}<br/><br/>`;
       html += `<button onclick="goToMenu()">Главное меню</button>`;
-
+      html += `<button onclick="restartGame()">В начало игры</button>`;
       document.getElementById("allCardsShown").innerHTML = html;
     }
 
     function goToMenu() {
+      window.location.href = "index.html";
+    }
+
+    function restartGame() {
       location.reload();
     }
 
