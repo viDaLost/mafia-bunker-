@@ -1,0 +1,50 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Orbitron', sans-serif;
+  background: linear-gradient(#0f0f0f, #1a1a1a);
+  color: white;
+  text-align: center;
+  padding: 40px;
+}
+
+button {
+  display: block;
+  margin: 20px auto;
+  background: transparent;
+  border: 2px solid #ff0033;
+  color: white;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: #ff0033;
+  color: black;
+}
+
+.card {
+  background: #1e1e1e;
+  border: 1px solid #444;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  text-align: left;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mafia-bg {
+  background-image: url('https://via.placeholder.com/800x600/000000/ffffff?text=City+Night ');
+  background-size: cover;
+  background-position: center;
+}
+
+.bunker-bg {
+  background-image: url('https://via.placeholder.com/800x600/111111/cccccc?text=Postapocalypse ');
+  background-size: cover;
+  background-position: center;
+}
