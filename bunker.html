@@ -150,6 +150,14 @@
     <div id="playerList" class="card-grid"></div>
   </div>
 
+  <!-- Всплывающая карточка -->
+  <div id="overlay" class="overlay">
+    <div class="overlay-content" id="overlayContent">
+      <div id="overlayCharacterData"></div>
+      <button onclick="closeOverlay(this)">Закрыть карточку</button>
+    </div>
+  </div>
+
   <!-- ЕДИНСТВЕННЫЕ кнопки "Главное меню" и "В начало игры" -->
   <div class="footer-buttons">
     <button onclick="goToMenu()">Главное меню</button>
@@ -189,11 +197,11 @@
       const setting = getRandom(settings);
 
       const area = getRandom([
-        "Площадь бункера — 50 квадратных метров, одноэтажный, местонахождение: подземелье",
-        "Площадь бункера — 80 квадратных метров, одноэтажный, местонахождение: горы",
-        "Площадь бункера — 120 квадратных метров, двухэтажный, местонахождение: пустыня",
-        "Площадь бункера — 160 квадратных метров, одноэтажный, местонахождение: лес",
-        "Площадь бункера — 200 квадратных метров, двухэтажный, местонахождение: равнина"
+        "Площадь бункера — 50 квадратных метров, одноэтажный",
+        "Площадь бункера — 80 квадратных метров, одноэтажный",
+        "Площадь бункера — 120 квадратных метров, двухэтажный",
+        "Площадь бункера — 160 квадратных метров, одноэтажный",
+        "Площадь бункера — 200 квадратных метров, двухэтажный"
       ]);
 
       const randomSupplies = getRandomMultiple(supplies, 2, 4).join(', ');
@@ -203,7 +211,6 @@
         <strong>Условия бункера:</strong><br/>
         ${area}<br/>
         Продолжительность: ${setting.duration}<br/>
-        Мест: ${setting.places}<br/>
         Припасы: ${randomSupplies}<br/><br/>
         <strong>Раунды:</strong><br/>
         Игроков всего: ${total}<br/>
@@ -332,7 +339,7 @@
     function generateCharacter(fields) {
       return {
         profession: getRandom(fields.professions),
-        health: getRandom(fields.health.filter(h => !h.includes("сексуальная") && !h.includes("репродуктивная"))),
+        health: getRandom(fields.health.filter(h => !h.includes("сексуальная") && !h.includes("репродуктивная")),
         phobia: getRandom(fields.phobias),
         skill: getRandom(fields.skills),
         inventory: getRandom(fields.inventory),
