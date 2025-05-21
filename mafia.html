@@ -13,23 +13,34 @@
     <p>Введите количество игроков (до 30)</p>
     <input type="number" id="playerCount" min="5" max="30" value="5" />
     <button onclick="startMafia()">Начать игру</button>
+    <button onclick="goToMenu()">Главное меню</button>
   </div>
 
-  <div id="game" style="display:none;">
-    <h2>Нажмите на номер игрока, чтобы увидеть свою роль</h2>
+  <div id="playerCardContainer" style="display: none;">
+    <h2 id="playerNumber">Игрок №1</h2>
+    <button onclick="showCurrentPlayerRole()">Показать роль</button>
+    <button onclick="goToMenu()">Главное меню</button>
+  </div>
+
+  <div id="roleCard" class="card" style="display: none;"></div>
+
+  <div id="allCardsShown" style="display: none;">
+    <h2>Все карточки показаны</h2>
     <div id="playerList"></div>
-    <div id="card" class="card"></div>
-    <button onclick="showAllPlayers()">Показать всех игроков</button>
+    <button onclick="goToMenu()">Главное меню</button>
   </div>
 
   <script>
+    let players = [];
+    let currentCharacterIndex = 0;
+
     async function startMafia() {
       const response = await fetch('data/roles.json');
       const roles = await response.json();
-      let players = [];
-      const total = parseInt(document.getElementById("playerCount").value);
+      let total = parseInt(document.getElementById("playerCount").value);
 
       // Распределение ролей
+      players = [];
       for (let role of roles) {
         for (let i = 0; i < role.count && players.length < total; i++) {
           players.push({role: role.name, revealed: false});
@@ -40,36 +51,65 @@
         players.push({role: "мирный житель", revealed: false});
       }
 
-      // Перемешиваем
-      players.sort(() => Math.random() - 0.5);
       localStorage.setItem("mafiaPlayers", JSON.stringify(players));
 
-      const list = document.getElementById("playerList");
-      list.innerHTML = "";
-      players.forEach((_, i) => {
-        const btn = document.createElement("button");
-        btn.innerText = `Игрок ${i + 1}`;
-        btn.onclick = () => showRole(i);
-        list.appendChild(btn);
-      });
-
       document.getElementById("setup").style.display = "none";
-      document.getElementById("game").style.display = "block";
+      document.getElementById("playerNumber").innerText = `Игрок №${currentCharacterIndex + 1}`;
+      document.getElementById("playerCardContainer").style.display = "block";
     }
 
-    function showRole(index) {
-      const players = JSON.parse(localStorage.getItem("mafiaPlayers"));
-      const role = players[index].role;
-      alert(`Вы — ${role}`);
+    function showCurrentPlayerRole() {
+      const chars = JSON.parse(localStorage.getItem("mafiaPlayers"));
+      if (currentCharacterIndex >= chars.length) return;
+
+      const char = chars[currentCharacterIndex];
+      let html = `<h3>Ваша роль:</h3>`;
+      html += `<strong>Роль:</strong> ${char.role}<br/><br/>`;
+      html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
+      html += `<button onclick="goToMenu()">Главное меню</button>`;
+
+      document.getElementById("roleCard").innerHTML = html;
+      document.getElementById("roleCard").style.display = "block";
+      document.getElementById("playerCardContainer").style.display = "none";
+    }
+
+    function nextPlayer() {
+      currentCharacterIndex++;
+      if (currentCharacterIndex < players.length) {
+        document.getElementById("playerNumber").innerText = `Игрок №${currentCharacterIndex + 1}`;
+        document.getElementById("playerCardContainer").style.display = "block";
+        document.getElementById("roleCard").style.display = "none";
+      } else {
+        showAllPlayers();
+      }
     }
 
     function showAllPlayers() {
-      const players = JSON.parse(localStorage.getItem("mafiaPlayers"));
-      let text = "Список игроков:\n\n";
+      document.getElementById("roleCard").style.display = "none";
+      document.getElementById("playerCardContainer").style.display = "none";
+      document.getElementById("allCardsShown").style.display = "block";
+
+      const listDiv = document.getElementById("playerList");
+      listDiv.innerHTML = "";
+
       players.forEach((p, i) => {
-        text += `Игрок ${i + 1} — ${p.role}\n`;
+        const btn = document.createElement("button");
+        btn.innerText = `Игрок ${i + 1}`;
+        btn.onclick = () => showFullRole(i);
+        listDiv.appendChild(btn);
       });
-      alert(text);
+    }
+
+    function showFullRole(index) {
+      const p = players[index];
+      let html = `<h3>Роль игрока ${index + 1}:</h3>`;
+      html += `<strong>Роль:</strong> ${p.role}<br/><br/>`;
+      html += `<button onclick="goToMenu()">Главное меню</button>`;
+      document.getElementById("allCardsShown").innerHTML = html;
+    }
+
+    function goToMenu() {
+      location.reload();
     }
   </script>
 </body>
