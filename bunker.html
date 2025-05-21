@@ -55,35 +55,33 @@
       font-weight: bold;
     }
 
-    /* Всплывающая карточка */
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      display: none;
-    }
-
-    .overlay.active {
-      display: flex;
-    }
-
-    .overlay-content {
-      background: #1e1e1e;
-      padding: 20px;
-      border-radius: 12px;
-      max-width: 400px;
+    .flip-card-back {
       text-align: left;
+      padding: 10px;
+      overflow-y: auto;
+      font-size: 14px;
     }
 
-    .overlay-content button {
-      margin-top: 15px;
+    .footer-buttons {
+      position: relative;
+      margin-top: 40px;
+      padding-bottom: 40px;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .footer-buttons button {
+      width: 45%;
+      font-size: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .footer-buttons button {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -103,16 +101,12 @@
     <div class="disaster-info" id="disasterText"></div>
     <div class="bunker-info" id="bunkerText"></div>
     <button onclick="showPlayerCard()">Показать карточку игрока</button>
-    <button onclick="goToMenu()">Главное меню</button>
-    <button onclick="restartGame()">В начало игры</button>
   </div>
 
   <!-- Шаг 3: Карточка текущего игрока -->
   <div id="playerCardContainer" style="display: none;">
     <h2 id="playerNumber">Игрок №1</h2>
     <button onclick="showCurrentPlayerCard()">Показать карточку</button>
-    <button onclick="goToMenu()">Главное меню</button>
-    <button onclick="restartGame()">В начало игры</button>
   </div>
 
   <!-- Шаг 4: Отображение карточки -->
@@ -122,18 +116,13 @@
   <div id="allCardsShown" style="display: none;">
     <h2>Все карточки показаны</h2>
     <div id="playerList" class="card-grid"></div>
-
-    <!-- Всплывающее окно -->
-    <div id="overlay" class="overlay">
-      <div class="overlay-content" id="overlayContent">
-        <div id="overlayCharacterData"></div>
-        <button onclick="closeOverlay()">Закрыть карточку</button>
-      </div>
-    </div>
   </div>
 
-  <button onclick="goToMenu()" style="margin-top: 20px;">Главное меню</button>
-  <button onclick="restartGame()">В начало игры</button>
+  <!-- Кнопки всегда внизу -->
+  <div class="footer-buttons">
+    <button onclick="goToMenu()">Главное меню</button>
+    <button onclick="restartGame()">В начало игры</button>
+  </div>
 
   <script>
     let characters = [];
@@ -197,10 +186,7 @@
       html += `<span class="label">Личностные качества:</span> ${char.quality}<br/>`;
       html += `<span class="label">Биография:</span> ${char.biography}<br/>`;
       html += `<span class="label">Секрет:</span> ${char.secret}<br/><br/>`;
-
       html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
-      html += `<button onclick="goToMenu()">Главное меню</button>`;
-      html += `<button onclick="restartGame()">В начало игры</button>`;
 
       document.getElementById("characterCard").innerHTML = html;
       document.getElementById("characterCard").style.display = "block";
@@ -237,7 +223,7 @@
               Игрок<br>${i + 1}
             </div>
             <div class="flip-card-back">
-              Полная информация
+              Роль: ${char.profession}
             </div>
           </div>
         `;
@@ -248,9 +234,6 @@
     function openOverlay(index) {
       const char = characters[index];
 
-      const overlay = document.getElementById("overlay");
-      const dataDiv = document.getElementById("overlayCharacterData");
-
       let html = `<h3>Персонаж игрока ${index + 1}</h3>`;
       html += `<span class="label">Профессия:</span> ${char.profession}<br/>`;
       html += `<span class="label">Здоровье:</span> ${char.health}<br/>`;
@@ -259,14 +242,29 @@
       html += `<span class="label">Инвентарь:</span> ${char.inventory}<br/>`;
       html += `<span class="label">Качество:</span> ${char.quality}<br/>`;
       html += `<span class="label">Биография:</span> ${char.biography}<br/>`;
-      html += `<span class="label">Секрет:</span> ${char.secret}<br/>`;
+      html += `<span class="label">Секрет:</span> ${char.secret}<br/><br/>`;
+      html += `<button onclick="closeOverlay(this)">Закрыть карточку</button>`;
 
-      dataDiv.innerHTML = html;
-      overlay.classList.add("active");
+      const existingOverlay = document.querySelector(".overlay-card.show");
+      if (existingOverlay) {
+        existingOverlay.classList.remove("show");
+        existingOverlay.style.display = "none";
+        existingOverlay.remove();
+        return;
+      }
+
+      const overlay = document.createElement("div");
+      overlay.className = "card overlay-card show";
+      overlay.style.display = "block";
+      overlay.innerHTML = html;
+
+      const container = document.getElementById("allCardsShown");
+      container.appendChild(overlay);
     }
 
-    function closeOverlay() {
-      document.getElementById("overlay").classList.remove("active");
+    function closeOverlay(el) {
+      el.parentElement.style.display = "none";
+      el.parentElement.classList.remove("show");
     }
 
     function goToMenu() {
@@ -280,7 +278,7 @@
     function generateCharacter(fields) {
       return {
         profession: getRandom(fields.professions),
-        health: getRandom(fields.health.filter(h => !h.includes("сексуальная") && !h.includes("репродуктивная"))),
+        health: getRandom(fields.health.filter(h => !h.includes("сексуальная") && !h.includes("репродуктивная")),
         phobia: getRandom(fields.phobias),
         skill: getRandom(fields.skills),
         inventory: getRandom(fields.inventory),
