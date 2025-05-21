@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Мафия</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron :wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="mafia-bg">
+  <div id="setup">
+    <h2>Игра Мафия</h2>
+    <p>Введите количество игроков (до 30)</p>
+    <input type="number" id="playerCount" min="5" max="30" value="5" />
+    <button onclick="startMafia()">Начать игру</button>
+  </div>
+
+  <div id="game" style="display:none;">
+    <h2>Нажмите на номер игрока, чтобы увидеть свою роль</h2>
+    <div id="playerList"></div>
+    <div id="card" class="card"></div>
+    <button onclick="showAllPlayers()">Показать всех игроков</button>
+  </div>
+
+  <script>
+    async function startMafia() {
+      const response = await fetch('data/roles.json');
+      const roles = await response.json();
+      let players = [];
+      const total = parseInt(document.getElementById("playerCount").value);
+
+      // Распределение ролей
+      for (let role of roles) {
+        for (let i = 0; i < role.count && players.length < total; i++) {
+          players.push({role: role.name, revealed: false});
+        }
+      }
+
+      while (players.length < total) {
+        players.push({role: "мирный житель", revealed: false});
+      }
+
+      // Перемешиваем
+      players.sort(() => Math.random() - 0.5);
+      localStorage.setItem("mafiaPlayers", JSON.stringify(players));
+
+      const list = document.getElementById("playerList");
+      list.innerHTML = "";
+      players.forEach((_, i) => {
+        const btn = document.createElement("button");
+        btn.innerText = `Игрок ${i + 1}`;
+        btn.onclick = () => showRole(i);
+        list.appendChild(btn);
+      });
+
+      document.getElementById("setup").style.display = "none";
+      document.getElementById("game").style.display = "block";
+    }
+
+    function showRole(index) {
+      const players = JSON.parse(localStorage.getItem("mafiaPlayers"));
+      const role = players[index].role;
+      alert(`Вы — ${role}`);
+    }
+
+    function showAllPlayers() {
+      const players = JSON.parse(localStorage.getItem("mafiaPlayers"));
+      let text = "Список игроков:\n\n";
+      players.forEach((p, i) => {
+        text += `Игрок ${i + 1} — ${p.role}\n`;
+      });
+      alert(text);
+    }
+  </script>
+</body>
+</html>
