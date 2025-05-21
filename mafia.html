@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron :wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Контейнер для карточек */
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -18,18 +17,26 @@
       margin-right: auto;
     }
 
-    /* Контейнер кнопок внизу */
     .footer-buttons {
       position: relative;
       margin-top: 40px;
       padding-bottom: 40px;
       z-index: 10;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
     .footer-buttons button {
-      width: 100%;
+      width: 45%;
       font-size: 16px;
-      margin-bottom: 15px;
+    }
+
+    @media (max-width: 480px) {
+      .footer-buttons button {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -60,8 +67,6 @@
   <div id="playerCardContainer" style="display: none;">
     <h2 id="playerNumber">Игрок №1</h2>
     <button onclick="showCurrentPlayerRole()">Показать роль</button>
-    <button onclick="goToMenu()">Главное меню</button>
-    <button onclick="restartGame()">В начало игры</button>
   </div>
 
   <!-- Шаг 3: Отображение роли -->
@@ -70,7 +75,7 @@
   <!-- Шаг 4: Все карточки показаны -->
   <div id="allCardsShown" style="display: none;">
     <h2>Все карточки показаны</h2>
-    <div id="playerList" class="card-grid"></div>
+    <div id="playerList"></div>
   </div>
 
   <!-- Кнопки всегда внизу -->
@@ -123,8 +128,6 @@
       let html = `<h3>Ваша роль:</h3>`;
       html += `<strong>Роль:</strong> ${char.role}<br/><br/>`;
       html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
-      html += `<button onclick="goToMenu()">Главное меню</button>`;
-      html += `<button onclick="restartGame()">В начало игры</button>`;
 
       document.getElementById("roleCard").innerHTML = html;
       document.getElementById("roleCard").style.display = "block";
