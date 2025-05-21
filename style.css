@@ -8,9 +8,24 @@ body {
   padding: 40px;
 }
 
+input[type="number"] {
+  font-size: 18px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  border: none;
+  outline: none;
+  margin: 10px auto;
+  display: block;
+  width: 80%;
+  max-width: 300px;
+  background-color: #222;
+  color: white;
+  text-align: center;
+}
+
 button {
   display: block;
-  margin: 20px auto;
+  margin: 15px auto;
   background: transparent;
   border: 2px solid #ff0033;
   color: white;
@@ -36,4 +51,30 @@ button:hover {
   max-width: 400px;
   margin-left: auto;
   margin-right: auto;
+  font-size: 16px;
+}
+
+.label {
+  font-weight: bold;
+  font-size: 18px;
+  color: #ff0033;
+  display: block;
+  margin-top: 10px;
+}
+
+.disaster-info,
+.bunker-info {
+  font-size: 17px;
+  line-height: 1.6;
+  text-align: left;
+  max-width: 400px;
+  margin: 0 auto 20px auto;
+}
+
+.disaster-info strong,
+.bunker-info strong {
+  display: block;
+  font-size: 18px;
+  color: #ff0033;
+  margin-top: 10px;
 }
