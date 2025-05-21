@@ -13,16 +13,22 @@
     <p>Введите количество игроков (до 30)</p>
     <input type="number" id="playerCount" min="2" max="30" value="5" />
     <button onclick="startBunker()">Начать игру</button>
+    <button onclick="goToMenu()">Главное меню</button>
   </div>
 
-  <div id="disasterInfo" style="display: none;">
-    <h2>Катастрофа произошла!</h2>
-    <div id="disasterText"></div>
-    <div id="bunkerText"></div>
-    <button onclick="showPlayerCard()">Показать карточку игрока</button>
+  <div id="playerCardContainer" style="display: none;">
+    <h2 id="playerNumber">Игрок №1</h2>
+    <button onclick="showCurrentPlayerCard()">Показать карточку</button>
+    <button onclick="goToMenu()">Главное меню</button>
   </div>
 
   <div id="characterCard" class="card" style="display: none;"></div>
+
+  <div id="allCardsShown" style="display: none;">
+    <h2>Все карточки показаны</h2>
+    <div id="playerList"></div>
+    <button onclick="goToMenu()">Главное меню</button>
+  </div>
 
   <script>
     let characters = [];
@@ -44,50 +50,90 @@
       const setting = getRandom(settings);
 
       document.getElementById("setup").style.display = "none";
-      document.getElementById("disasterText").innerHTML = `<h3>Катастрофа:</h3><p>${disaster.type} — ${disaster.description}</p>`;
-      document.getElementById("bunkerText").innerHTML = `
-        <h3>Условия бункера:</h3>
-        <ul>
-          <li>Размер: ${setting.size}</li>
-          <li>Ресурсы: ${setting.resources}</li>
-          <li>Продолжительность: ${setting.duration}</li>
-          <li>Мест: ${setting.places}</li>
-        </ul>`;
-      document.getElementById("disasterInfo").style.display = "block";
 
       // Генерируем персонажей
       characters = Array.from({length: total}, () => generateCharacter(fields));
       localStorage.setItem("bunkerCharacters", JSON.stringify(characters));
+
+      // Показываем первого игрока
+      document.getElementById("playerNumber").innerText = `Игрок №${currentCharacterIndex + 1}`;
+      document.getElementById("playerCardContainer").style.display = "block";
     }
 
-    function showPlayerCard() {
+    function showCurrentPlayerCard() {
       const chars = JSON.parse(localStorage.getItem("bunkerCharacters"));
-      if (currentCharacterIndex >= chars.length) {
-        alert("Все игроки просмотрели свои карточки.");
-        return;
-      }
+      if (currentCharacterIndex >= chars.length) return;
 
       const char = chars[currentCharacterIndex];
-      let html = `<h3>Ваша карточка — Игрок ${currentCharacterIndex + 1}:</h3>`;
-      for (const key in char) {
-        html += `<strong>${key}:</strong> ${char[key]}<br/><br/>`;
-      }
+      let html = `<h3>Карточка игрока ${currentCharacterIndex + 1}:</h3>`;
+      html += `<strong>Профессия:</strong> ${char.profession}<br/><br/>`;
+      html += `<strong>Здоровье:</strong> ${char.health}<br/><br/>`;
+      html += `<strong>Фобия:</strong> ${char.phobia}<br/><br/>`;
+      html += `<strong>Хобби / Навыки:</strong> ${char.skill}<br/><br/>`;
+      html += `<strong>Инвентарь:</strong> ${char.inventory}<br/><br/>`;
+      html += `<strong>Личностные качества:</strong> ${char.quality}<br/><br/>`;
+      html += `<strong>Биография:</strong> ${char.biography}<br/><br/>`;
+      html += `<strong>Секрет:</strong> ${char.secret}<br/><br/>`;
+
       html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
+      html += `<button onclick="goToMenu()">Главное меню</button>`;
+
       document.getElementById("characterCard").innerHTML = html;
       document.getElementById("characterCard").style.display = "block";
-      document.getElementById("disasterInfo").style.display = "none";
+      document.getElementById("playerCardContainer").style.display = "none";
     }
 
     function nextPlayer() {
       currentCharacterIndex++;
+      if (currentCharacterIndex < characters.length) {
+        document.getElementById("playerNumber").innerText = `Игрок №${currentCharacterIndex + 1}`;
+        document.getElementById("playerCardContainer").style.display = "block";
+        document.getElementById("characterCard").style.display = "none";
+      } else {
+        showAllPlayers();
+      }
+    }
+
+    function showAllPlayers() {
       document.getElementById("characterCard").style.display = "none";
-      showPlayerCard();
+      document.getElementById("playerCardContainer").style.display = "none";
+      document.getElementById("allCardsShown").style.display = "block";
+
+      const listDiv = document.getElementById("playerList");
+      listDiv.innerHTML = "";
+
+      characters.forEach((char, i) => {
+        const btn = document.createElement("button");
+        btn.innerText = `Игрок ${i + 1}`;
+        btn.onclick = () => showFullCard(i);
+        listDiv.appendChild(btn);
+      });
+    }
+
+    function showFullCard(index) {
+      const char = characters[index];
+      let html = `<h3>Карточка игрока ${index + 1}:</h3>`;
+      html += `<strong>Профессия:</strong> ${char.profession}<br/><br/>`;
+      html += `<strong>Здоровье:</strong> ${char.health}<br/><br/>`;
+      html += `<strong>Фобия:</strong> ${char.phobia}<br/><br/>`;
+      html += `<strong>Хобби / Навыки:</strong> ${char.skill}<br/><br/>`;
+      html += `<strong>Инвентарь:</strong> ${char.inventory}<br/><br/>`;
+      html += `<strong>Личностные качества:</strong> ${char.quality}<br/><br/>`;
+      html += `<strong>Биография:</strong> ${char.biography}<br/><br/>`;
+      html += `<strong>Секрет:</strong> ${char.secret}<br/><br/>`;
+      html += `<button onclick="goToMenu()">Главное меню</button>`;
+
+      document.getElementById("allCardsShown").innerHTML = html;
+    }
+
+    function goToMenu() {
+      location.reload();
     }
 
     function generateCharacter(fields) {
       return {
         profession: getRandom(fields.professions),
-        health: getRandom(fields.health),
+        health: getRandom(fields.health.filter(h => !h.includes("сексуальная") && !h.includes("репродуктивная"))),
         phobia: getRandom(fields.phobias),
         skill: getRandom(fields.skills),
         inventory: getRandom(fields.inventory),
