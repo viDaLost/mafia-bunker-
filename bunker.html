@@ -150,7 +150,7 @@
     <div id="playerList" class="card-grid"></div>
   </div>
 
-  <!-- ЕДИНСТВЕННЫЕ кнопки внизу страницы -->
+  <!-- ЕДИНСТВЕННЫЕ кнопки "Главное меню" и "В начало игры" -->
   <div class="footer-buttons">
     <button onclick="goToMenu()">Главное меню</button>
     <button onclick="restartGame()">В начало игры</button>
@@ -310,17 +310,24 @@
     }
 
     function restartGame() {
-      // Очищаем localStorage
-      localStorage.clear();
+      location.reload();
+    }
 
-      // Сбрасываем состояние
-      document.getElementById("setup").style.display = "block";
-      document.getElementById("disasterInfo").style.display = "none";
-      document.getElementById("playerCardContainer").style.display = "none";
-      document.getElementById("characterCard").style.display = "none";
-      document.getElementById("allCardsShown").style.display = "none";
-      document.getElementById("playerList").innerHTML = "";
-      currentCharacterIndex = 0;
+    function generateCharacter(fields) {
+      return {
+        profession: getRandom(fields.professions),
+        health: getRandom(fields.health.filter(h => !h.includes("сексуальная") && !h.includes("репродуктивная")),
+        phobia: getRandom(fields.phobias),
+        skill: getRandom(fields.skills),
+        inventory: getRandom(fields.inventory),
+        quality: getRandom(fields.qualities),
+        biography: getRandom(fields.biography),
+        secret: getRandom(fields.secrets)
+      };
+    }
+
+    function getRandom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
     }
   </script>
 </body>
