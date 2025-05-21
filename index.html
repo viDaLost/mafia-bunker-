@@ -3,13 +3,94 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Мафия & Бункер</title>
+  <title>Мафия / Бункер</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron :wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+
+  <!-- Только для главного меню -->
+  <style>
+    /* Сброс стилей */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(to bottom, #0f0f0f, #1a1a1a);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      padding: 30px 20px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .title {
+      font-size: 24px;
+      margin-bottom: 40px;
+      color: #ff0040;
+      text-shadow: 0 0 10px #ff0040;
+    }
+
+    button {
+      width: 100%;
+      background: transparent;
+      border: 2px solid #ff0040;
+      color: white;
+      padding: 14px;
+      font-size: 18px;
+      margin-bottom: 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #ff0040;
+    }
+
+    button:hover {
+      background-color: #ff0040;
+      color: black;
+      transform: scale(1.02);
+      box-shadow: 0 0 20px #ff0040;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title {
+        font-size: 22px;
+      }
+
+      button {
+        font-size: 16px;
+        padding: 12px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Выберите игру</h1>
-  <button onclick="window.location.href='mafia.html'">Мафия</button>
-  <button onclick="window.location.href='bunker.html'">Бункер</button>
+  <div class="container">
+    <h1 class="title">Выберите игру</h1>
+    <button onclick="window.location.href='mafia.html'">Мафия</button>
+    <button onclick="window.location.href='bunker.html'">Бункер</button>
+  </div>
 </body>
 </html>
