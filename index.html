@@ -5,10 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Мафия / Бункер</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron :wght@500&display=swap" rel="stylesheet">
-  
+
   <!-- Только для главного меню -->
   <style>
-    /* Общие стили главного меню */
+    /* Сброс стилей */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       padding: 0;
@@ -21,7 +27,6 @@
       align-items: center;
     }
 
-    /* Контейнер главного меню */
     .container {
       width: 100%;
       max-width: 400px;
@@ -30,7 +35,6 @@
       animation: fadeIn 1s ease-in-out;
     }
 
-    /* Заголовок */
     .title {
       font-size: 24px;
       margin-bottom: 40px;
@@ -38,7 +42,6 @@
       text-shadow: 0 0 10px #ff0040;
     }
 
-    /* Кнопки */
     button {
       width: 100%;
       background: transparent;
@@ -60,7 +63,6 @@
       box-shadow: 0 0 20px #ff0040;
     }
 
-    /* Анимация появления */
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -72,7 +74,6 @@
       }
     }
 
-    /* Мобильная адаптация */
     @media (max-width: 480px) {
       .title {
         font-size: 22px;
