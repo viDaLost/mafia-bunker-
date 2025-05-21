@@ -1,12 +1,4 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Orbitron', sans-serif;
-  background: linear-gradient(#0f0f0f, #1a1a1a);
-  color: white;
-  text-align: center;
-  padding: 40px;
-}
+/* === Стили ТОЛЬКО для игр === */
 
 input[type="number"] {
   font-size: 18px;
@@ -23,7 +15,8 @@ input[type="number"] {
   text-align: center;
 }
 
-button {
+/* Кнопки */
+.game-button {
   display: block;
   margin: 15px auto;
   background: transparent;
@@ -36,11 +29,12 @@ button {
   transition: all 0.3s ease;
 }
 
-button:hover {
+.game-button:hover {
   background: #ff0033;
   color: black;
 }
 
+/* Карточки персонажей */
 .card {
   background: #1e1e1e;
   border: 1px solid #444;
