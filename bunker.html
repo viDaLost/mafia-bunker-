@@ -6,6 +6,62 @@
   <title>Бункер</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron :wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .flip-card {
+      background-color: transparent;
+      width: 100%;
+      height: 140px;
+      perspective: 1000px;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front,
+    .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 16px;
+      color: white;
+      background: #222;
+      cursor: pointer;
+      padding: 10px;
+    }
+
+    .flip-card-back {
+      transform: rotateY(180deg);
+      text-align: left;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body class="bunker-bg">
   <!-- Шаг 1: Выбор количества игроков -->
@@ -41,7 +97,7 @@
   <!-- Шаг 5: Все карточки показаны -->
   <div id="allCardsShown" style="display: none;">
     <h2>Все карточки показаны</h2>
-    <div id="playerList"></div>
+    <div id="playerList" class="card-grid"></div>
     <button onclick="goToMenu()">Главное меню</button>
     <button onclick="restartGame()">В начало игры</button>
   </div>
@@ -109,7 +165,7 @@
 
     function showPlayerCard() {
       document.getElementById("disasterInfo").style.display = "none";
-      document.getElementById("playerNumber").innerText = `Игрок №${currentCharacterIndex + 1}`;
+      document.getElementById("playerNumber").innerText = `Игрок №1`;
       document.getElementById("playerCardContainer").style.display = "block";
     }
 
@@ -156,28 +212,34 @@
       const listDiv = document.getElementById("playerList");
       listDiv.innerHTML = "";
 
-      characters.forEach((p, i) => {
-        const btn = document.createElement("button");
-        btn.innerText = `Игрок ${i + 1}`;
-        btn.onclick = () => showFullCard(i);
-        listDiv.appendChild(btn);
+      characters.forEach((char, i) => {
+        const card = document.createElement("div");
+        card.className = "flip-card";
+        card.setAttribute("onclick", `toggleFlip(this, ${i})`);
+
+        card.innerHTML = `
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              Игрок<br>${i + 1}
+            </div>
+            <div class="flip-card-back">
+              <strong>Профессия:</strong> ${char.profession}<br/>
+              <strong>Здоровье:</strong> ${char.health}<br/>
+              <strong>Фобия:</strong> ${char.phobia}<br/>
+              <strong>Хобби / Навыки:</strong> ${char.skill}<br/>
+              <strong>Инвентарь:</strong> ${char.inventory}<br/>
+              <strong>Качество:</strong> ${char.quality}<br/>
+              <strong>Биография:</strong> ${char.biography}<br/>
+              <strong>Секрет:</strong> ${char.secret}<br/>
+            </div>
+          </div>
+        `;
+        listDiv.appendChild(card);
       });
     }
 
-    function showFullCard(index) {
-      const p = characters[index];
-      let html = `<h3>Карточка игрока ${index + 1}:</h3>`;
-      html += `<span class="label">Профессия:</span> ${p.profession}<br/>`;
-      html += `<span class="label">Здоровье:</span> ${p.health}<br/>`;
-      html += `<span class="label">Фобия:</span> ${p.phobia}<br/>`;
-      html += `<span class="label">Хобби / Навыки:</span> ${p.skill}<br/>`;
-      html += `<span class="label">Инвентарь:</span> ${p.inventory}<br/>`;
-      html += `<span class="label">Личностные качества:</span> ${p.quality}<br/>`;
-      html += `<span class="label">Биография:</span> ${p.biography}<br/>`;
-      html += `<span class="label">Секрет:</span> ${p.secret}<br/><br/>`;
-      html += `<button onclick="goToMenu()">Главное меню</button>`;
-      html += `<button onclick="restartGame()">В начало игры</button>`;
-      document.getElementById("allCardsShown").innerHTML = html;
+    function toggleFlip(element, index) {
+      element.classList.toggle("flipped");
     }
 
     function goToMenu() {
