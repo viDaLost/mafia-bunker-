@@ -56,12 +56,45 @@
     }
 
     .flip-card-back {
+      transform: rotateY(180deg);
       text-align: left;
       padding: 10px;
       overflow-y: auto;
       font-size: 14px;
     }
 
+    /* Всплывающее окно */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      display: none;
+    }
+
+    .overlay.active {
+      display: flex;
+    }
+
+    .overlay-content {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 400px;
+      text-align: left;
+    }
+
+    .overlay-content button {
+      margin-top: 15px;
+    }
+
+    /* Кнопки всегда внизу */
     .footer-buttons {
       position: relative;
       margin-top: 40px;
@@ -117,7 +150,7 @@
     <div id="playerList" class="card-grid"></div>
   </div>
 
-  <!-- Кнопки всегда внизу -->
+  <!-- ЕДИНСТВЕННЫЕ кнопки "Главное меню" и "В начало игры" -->
   <div class="footer-buttons">
     <button onclick="goToMenu()">Главное меню</button>
     <button onclick="restartGame()">В начало игры</button>
@@ -222,7 +255,14 @@
               Игрок<br>${i + 1}
             </div>
             <div class="flip-card-back">
-              Роль: ${char.profession}
+              Роль: ${char.profession}<br/>
+              Здоровье: ${char.health}<br/>
+              Фобия: ${char.phobia}<br/>
+              Хобби: ${char.skill}<br/>
+              Инвентарь: ${char.inventory}<br/>
+              Личность: ${char.quality}<br/>
+              Биография: ${char.biography}<br/>
+              Секрет: ${char.secret}
             </div>
           </div>
         `;
@@ -249,7 +289,6 @@
         existingOverlay.classList.remove("show");
         existingOverlay.style.display = "none";
         existingOverlay.remove();
-        return;
       }
 
       const overlay = document.createElement("div");
