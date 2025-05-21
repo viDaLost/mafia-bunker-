@@ -18,17 +18,16 @@
     }
 
     .flip-card {
-      background-color: transparent;
       width: 100%;
       height: 140px;
       perspective: 1000px;
+      cursor: pointer;
     }
 
     .flip-card-inner {
       position: relative;
       width: 100%;
       height: 100%;
-      text-align: center;
       transition: transform 0.6s;
       transform-style: preserve-3d;
     }
@@ -48,18 +47,43 @@
       align-items: center;
       justify-content: center;
       border-radius: 12px;
-      font-size: 16px;
-      color: white;
       background: #222;
-      cursor: pointer;
-      padding: 10px;
     }
 
-    .flip-card-back {
-      transform: rotateY(180deg);
+    .flip-card-front {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    /* Всплывающая карточка */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      display: none;
+    }
+
+    .overlay.active {
+      display: flex;
+    }
+
+    .overlay-content {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 400px;
       text-align: left;
-      overflow-y: auto;
-      font-size: 14px;
+    }
+
+    .overlay-content button {
+      margin-top: 15px;
     }
   </style>
 </head>
@@ -98,38 +122,33 @@
   <div id="allCardsShown" style="display: none;">
     <h2>Все карточки показаны</h2>
     <div id="playerList" class="card-grid"></div>
-    <button onclick="goToMenu()">Главное меню</button>
-    <button onclick="restartGame()">В начало игры</button>
+
+    <!-- Всплывающее окно -->
+    <div id="overlay" class="overlay">
+      <div class="overlay-content" id="overlayContent">
+        <div id="overlayCharacterData"></div>
+        <button onclick="closeOverlay()">Закрыть карточку</button>
+      </div>
+    </div>
   </div>
+
+  <button onclick="goToMenu()" style="margin-top: 20px;">Главное меню</button>
+  <button onclick="restartGame()">В начало игры</button>
 
   <script>
     let characters = [];
     let currentCharacterIndex = 0;
-    let disaster = {};
-    let bunkerSetting = {};
-    let supplies = [];
 
     async function startBunker() {
       const disasterRes = await fetch('data/disasters.json');
       const settingsRes = await fetch('data/bunker-settings.json');
       const fieldsRes = await fetch('data/fields.json');
-      const suppliesRes = await fetch('data/supplies.json');
 
       const disasters = await disasterRes.json();
       const settings = await settingsRes.json();
       const fields = await fieldsRes.json();
-      supplies = await suppliesRes.json();
 
       const total = parseInt(document.getElementById("playerCount").value);
-
-      // Сохраняем катастрофу и условия
-      disaster = getRandom(disasters);
-      bunkerSetting = getRandom(settings);
-
-      // Рассчитываем исключения
-      const playersToStay = Math.ceil(total * 0.2);
-      const playersToRemove = total - playersToStay;
-      const removalPlan = calculateRemoval(playersToRemove, 6);
 
       // Генерируем персонажей
       characters = Array.from({length: total}, () => generateCharacter(fields));
@@ -137,7 +156,10 @@
 
       document.getElementById("setup").style.display = "none";
 
-      // Формируем текст катастрофы и бункера
+      // Показываем катастрофу и условия бункера
+      const disaster = getRandom(disasters);
+      const setting = getRandom(settings);
+
       const area = getRandom([
         "Площадь бункера — 50 квадратных метров, бункер одноэтажный, местонахождение: подземелье",
         "Площадь бункера — 80 квадратных метров, бункер одноэтажный, местонахождение: горы",
@@ -146,19 +168,11 @@
         "Площадь бункера — 200 квадратных метров, бункер двухэтажный, местонахождение: равнина"
       ]);
 
-      const randomSupplies = getRandomMultiple(supplies, 2, 4).join(', ');
-
       document.getElementById("disasterText").innerHTML = `<strong>Катастрофа:</strong> ${disaster.type} — ${disaster.description}`;
       document.getElementById("bunkerText").innerHTML = `
         <strong>Условия бункера:</strong><br/>
         ${area}<br/>
-        Продолжительность: ${bunkerSetting.duration}<br/>
-        Припасы: ${randomSupplies}<br/><br/>
-        <strong>Раунды:</strong><br/>
-        Игроков всего: ${total}<br/>
-        Остаться должны: ${playersToStay}<br/>
-        Исключено за игру: ${playersToRemove}<br/>
-        Исключения по раундам: ${removalPlan.join(', ')}
+        Продолжительность: ${setting.duration}
       `;
       document.getElementById("disasterInfo").style.display = "block";
     }
@@ -215,7 +229,7 @@
       characters.forEach((char, i) => {
         const card = document.createElement("div");
         card.className = "flip-card";
-        card.setAttribute("onclick", `toggleFlip(this, ${i})`);
+        card.setAttribute("onclick", `openOverlay(${i})`);
 
         card.innerHTML = `
           <div class="flip-card-inner">
@@ -223,14 +237,7 @@
               Игрок<br>${i + 1}
             </div>
             <div class="flip-card-back">
-              <strong>Профессия:</strong> ${char.profession}<br/>
-              <strong>Здоровье:</strong> ${char.health}<br/>
-              <strong>Фобия:</strong> ${char.phobia}<br/>
-              <strong>Хобби / Навыки:</strong> ${char.skill}<br/>
-              <strong>Инвентарь:</strong> ${char.inventory}<br/>
-              <strong>Качество:</strong> ${char.quality}<br/>
-              <strong>Биография:</strong> ${char.biography}<br/>
-              <strong>Секрет:</strong> ${char.secret}<br/>
+              Полная информация
             </div>
           </div>
         `;
@@ -238,8 +245,28 @@
       });
     }
 
-    function toggleFlip(element, index) {
-      element.classList.toggle("flipped");
+    function openOverlay(index) {
+      const char = characters[index];
+
+      const overlay = document.getElementById("overlay");
+      const dataDiv = document.getElementById("overlayCharacterData");
+
+      let html = `<h3>Персонаж игрока ${index + 1}</h3>`;
+      html += `<span class="label">Профессия:</span> ${char.profession}<br/>`;
+      html += `<span class="label">Здоровье:</span> ${char.health}<br/>`;
+      html += `<span class="label">Фобия:</span> ${char.phobia}<br/>`;
+      html += `<span class="label">Хобби / Навыки:</span> ${char.skill}<br/>`;
+      html += `<span class="label">Инвентарь:</span> ${char.inventory}<br/>`;
+      html += `<span class="label">Качество:</span> ${char.quality}<br/>`;
+      html += `<span class="label">Биография:</span> ${char.biography}<br/>`;
+      html += `<span class="label">Секрет:</span> ${char.secret}<br/>`;
+
+      dataDiv.innerHTML = html;
+      overlay.classList.add("active");
+    }
+
+    function closeOverlay() {
+      document.getElementById("overlay").classList.remove("active");
     }
 
     function goToMenu() {
@@ -265,29 +292,6 @@
 
     function getRandom(arr) {
       return arr[Math.floor(Math.random() * arr.length)];
-    }
-
-    function getRandomMultiple(arr, min, max) {
-      const count = Math.floor(Math.random() * (max - min + 1)) + min;
-      const copy = [...arr];
-      const result = [];
-      for (let i = 0; i < count && copy.length > 0; i++) {
-        const item = getRandom(copy);
-        result.push(item);
-        copy.splice(copy.indexOf(item), 1);
-      }
-      return result;
-    }
-
-    function calculateRemoval(totalRemove, rounds) {
-      const plan = new Array(rounds).fill(0);
-      let remaining = totalRemove;
-      for (let i = 0; i < rounds && remaining > 0; i++) {
-        const share = Math.ceil(remaining / (rounds - i));
-        plan[i] = share;
-        remaining -= share;
-      }
-      return plan;
     }
   </script>
 </body>
