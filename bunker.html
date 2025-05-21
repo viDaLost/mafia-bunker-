@@ -51,15 +51,18 @@
     let currentCharacterIndex = 0;
     let disaster = {};
     let bunkerSetting = {};
+    let supplies = [];
 
     async function startBunker() {
       const disasterRes = await fetch('data/disasters.json');
       const settingsRes = await fetch('data/bunker-settings.json');
       const fieldsRes = await fetch('data/fields.json');
+      const suppliesRes = await fetch('data/supplies.json');
 
       const disasters = await disasterRes.json();
       const settings = await settingsRes.json();
       const fields = await fieldsRes.json();
+      supplies = await suppliesRes.json();
 
       const total = parseInt(document.getElementById("playerCount").value);
 
@@ -67,20 +70,42 @@
       disaster = getRandom(disasters);
       bunkerSetting = getRandom(settings);
 
+      // Рассчитываем исключения
+      const playersToStay = Math.ceil(total * 0.2);
+      const playersToRemove = total - playersToStay;
+      const removalPlan = calculateRemoval(playersToRemove, 6);
+
       // Генерируем персонажей
       characters = Array.from({length: total}, () => generateCharacter(fields));
       localStorage.setItem("bunkerCharacters", JSON.stringify(characters));
 
       document.getElementById("setup").style.display = "none";
 
-      // Показываем катастрофу и бункер
+      // Формируем текст бункера
+      const area = getRandom([
+        "Площадь бункера — 50 квадратных метров, бункер одноэтажный, местонахождение: подземелье",
+        "Площадь бункера — 80 квадратных метров, бункер одноэтажный, местонахождение: горы",
+        "Площадь бункера — 120 квадратных метров, бункер двухэтажный, местонахождение: пустыня",
+        "Площадь бункера — 160 квадратных метров, бункер одноэтажный, местонахождение: лес",
+        "Площадь бункера — 200 квадратных метров, бункер двухэтажный, местонахождение: равнина"
+      ]);
+
+      const randomSupplies = getRandomMultiple(supplies, 2, 4).join(', ');
+
+      // Формируем текст катастрофы и бункера
       document.getElementById("disasterText").innerHTML = `<strong>Катастрофа:</strong> ${disaster.type} — ${disaster.description}`;
       document.getElementById("bunkerText").innerHTML = `
         <strong>Условия бункера:</strong><br/>
-        Размер: ${bunkerSetting.size}<br/>
+        ${area}<br/>
         Ресурсы: ${bunkerSetting.resources}<br/>
         Продолжительность: ${bunkerSetting.duration}<br/>
-        Мест: ${bunkerSetting.places}
+        Мест: ${bunkerSetting.places}<br/>
+        Припасы: ${randomSupplies}<br/><br/>
+        <strong>Раунды:</strong><br/>
+        Игроков всего: ${total}<br/>
+        Остаться должны: ${playersToStay}<br/>
+        Исключено за игру: ${playersToRemove}<br/>
+        Исключения по раундам: ${removalPlan.join(', ')}
       `;
       document.getElementById("disasterInfo").style.display = "block";
     }
@@ -181,6 +206,32 @@
 
     function getRandom(arr) {
       return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function getRandomMultiple(arr, min, max) {
+      const count = Math.floor(Math.random() * (max - min + 1)) + min;
+      const copy = [...arr];
+      const result = [];
+      for (let i = 0; i < count && copy.length > 0; i++) {
+        const item = getRandom(copy);
+        result.push(item);
+        copy.splice(copy.indexOf(item), 1);
+      }
+      return result;
+    }
+
+    function calculateRemoval(totalRemove, rounds) {
+      const plan = new Array(rounds).fill(0);
+      let remaining = totalRemove;
+
+      // Приоритет на первые раунды
+      for (let i = 0; i < rounds && remaining > 0; i++) {
+        const share = Math.ceil(remaining / (rounds - i));
+        plan[i] = share;
+        remaining -= share;
+      }
+
+      return plan;
     }
   </script>
 </body>
