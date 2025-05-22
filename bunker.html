@@ -173,8 +173,8 @@
 
       const total = parseInt(document.getElementById("playerCount").value);
 
-      // Генерируем персонажей
-      characters = Array.from({length: total}, () => generateCharacter(fields));
+      // Генерируем персонажей с уникальными полями
+      characters = Array.from({length: total}, () => generateUniqueCharacter(fields));
       localStorage.setItem("bunkerCharacters", JSON.stringify(characters));
 
       document.getElementById("setup").style.display = "none";
@@ -189,11 +189,11 @@
       const setting = getRandom(settings);
 
       const area = getRandom([
-        "Площадь бункера — 50 квадратных метров, одноэтажный, местонахождение: подземелье",
-        "Площадь бункера — 80 квадратных метров, одноэтажный, местонахождение: горы",
-        "Площадь бункера — 120 квадратных метров, двухэтажный, местонахождение: пустыня",
-        "Площадь бункера — 160 квадратных метров, одноэтажный, местонахождение: лес",
-        "Площадь бункера — 200 квадратных метров, двухэтажный, местонахождение: равнина"
+        "Площадь бункера — 50 квадратных метров, одноэтажный",
+        "Площадь бункера — 80 квадратных метров, одноэтажный",
+        "Площадь бункера — 120 квадратных метров, двухэтажный",
+        "Площадь бункера — 160 квадратных метров, одноэтажный",
+        "Площадь бункера — 200 квадратных метров, двухэтажный"
       ]);
 
       const randomSupplies = getRandomMultiple(supplies, 2, 4).join(', ');
@@ -225,14 +225,14 @@
 
       const char = chars[currentCharacterIndex];
       let html = `<h3>Карточка игрока ${currentCharacterIndex + 1}:</h3>`;
-      html += `<span class="label">Профессия:</span> ${char.profession}<br/>`;
-      html += `<span class="label">Здоровье:</span> ${char.health}<br/>`;
-      html += `<span class="label">Фобия:</span> ${char.phobia}<br/>`;
-      html += `<span class="label">Хобби / Навыки:</span> ${char.skill}<br/>`;
-      html += `<span class="label">Инвентарь:</span> ${char.inventory}<br/>`;
-      html += `<span class="label">Личностные качества:</span> ${char.quality}<br/>`;
-      html += `<span class="label">Биография:</span> ${char.biography}<br/>`;
-      html += `<span class="label">Секрет:</span> ${char.secret}<br/><br/>`;
+      html += `<span class="label">Профессия:</span> ${capitalizeFirstLetter(char.profession)}<br/>`;
+      html += `<span class="label">Здоровье:</span> ${capitalizeFirstLetter(char.health)}<br/>`;
+      html += `<span class="label">Фобия:</span> ${capitalizeFirstLetter(char.phobia)}<br/>`;
+      html += `<span class="label">Хобби / Навыки:</span> ${capitalizeFirstLetter(char.skill)}<br/>`;
+      html += `<span class="label">Инвентарь:</span> ${capitalizeFirstLetter(char.inventory)}<br/>`;
+      html += `<span class="label">Личностные качества:</span> ${capitalizeFirstLetter(char.quality)}<br/>`;
+      html += `<span class="label">Биография:</span> ${capitalizeFirstLetter(char.biography)}<br/>`;
+      html += `<span class="label">Секрет:</span> ${capitalizeFirstLetter(char.secret)}<br/><br/>`;
       html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
 
       document.getElementById("characterCard").innerHTML = html;
@@ -270,14 +270,14 @@
               Игрок<br>${i + 1}
             </div>
             <div class="flip-card-back">
-              Профессия: ${char.profession}<br/>
-              Здоровье: ${char.health}<br/>
-              Фобия: ${char.phobia}<br/>
-              Хобби: ${char.skill}<br/>
-              Инвентарь: ${char.inventory}<br/>
-              Личность: ${char.quality}<br/>
-              Биография: ${char.biography}<br/>
-              Секрет: ${char.secret}
+              Профессия: ${capitalizeFirstLetter(char.profession)}<br/>
+              Здоровье: ${capitalizeFirstLetter(char.health)}<br/>
+              Фобия: ${capitalizeFirstLetter(char.phobia)}<br/>
+              Хобби: ${capitalizeFirstLetter(char.skill)}<br/>
+              Инвентарь: ${capitalizeFirstLetter(char.inventory)}<br/>
+              Личность: ${capitalizeFirstLetter(char.quality)}<br/>
+              Биография: ${capitalizeFirstLetter(char.biography)}<br/>
+              Секрет: ${capitalizeFirstLetter(char.secret)}
             </div>
           </div>
         `;
@@ -289,14 +289,14 @@
       const char = characters[index];
 
       let html = `<h3>Персонаж игрока ${index + 1}</h3>`;
-      html += `<span class="label">Профессия:</span> ${char.profession}<br/>`;
-      html += `<span class="label">Здоровье:</span> ${char.health}<br/>`;
-      html += `<span class="label">Фобия:</span> ${char.phobia}<br/>`;
-      html += `<span class="label">Хобби / Навыки:</span> ${char.skill}<br/>`;
-      html += `<span class="label">Инвентарь:</span> ${char.inventory}<br/>`;
-      html += `<span class="label">Качество:</span> ${char.quality}<br/>`;
-      html += `<span class="label">Биография:</span> ${char.biography}<br/>`;
-      html += `<span class="label">Секрет:</span> ${char.secret}<br/><br/>`;
+      html += `<span class="label">Профессия:</span> ${capitalizeFirstLetter(char.profession)}<br/>`;
+      html += `<span class="label">Здоровье:</span> ${capitalizeFirstLetter(char.health)}<br/>`;
+      html += `<span class="label">Фобия:</span> ${capitalizeFirstLetter(char.phobia)}<br/>`;
+      html += `<span class="label">Хобби / Навыки:</span> ${capitalizeFirstLetter(char.skill)}<br/>`;
+      html += `<span class="label">Инвентарь:</span> ${capitalizeFirstLetter(char.inventory)}<br/>`;
+      html += `<span class="label">Качество:</span> ${capitalizeFirstLetter(char.quality)}<br/>`;
+      html += `<span class="label">Биография:</span> ${capitalizeFirstLetter(char.biography)}<br/>`;
+      html += `<span class="label">Секрет:</span> ${capitalizeFirstLetter(char.secret)}<br/><br/>`;
       html += `<button onclick="closeOverlay(this)">Закрыть карточку</button>`;
 
       const existingOverlay = document.querySelector(".overlay-card.show");
@@ -328,16 +328,60 @@
       location.reload();
     }
 
-    function generateCharacter(fields) {
+    function capitalizeFirstLetter(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function generateUniqueValues(arr, exclude = []) {
+      const pool = arr.filter(item => !exclude.includes(item));
+      const result = [];
+
+      while (result.length < 1 && pool.length > 0) {
+        result.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+      }
+
+      return result[0];
+    }
+
+    function generateUniqueCharacter(fields) {
+      const used = [];
+
+      const profession = generateUniqueValues(fields.professions, used);
+      used.push(profession);
+
+      const health = generateUniqueValues(
+        fields.health.filter(h => !h.includes("сексуальная") && !h.includes("репродуктивная")),
+        used
+      );
+      used.push(health);
+
+      const phobia = generateUniqueValues(fields.phobias, used);
+      used.push(phobia);
+
+      const skill = generateUniqueValues(fields.skills, used);
+      used.push(skill);
+
+      const inventory = generateUniqueValues(fields.inventory, used);
+      used.push(inventory);
+
+      const quality = generateUniqueValues(fields.qualities, used);
+      used.push(quality);
+
+      const biography = generateUniqueValues(fields.biography, used);
+      used.push(biography);
+
+      const secret = generateUniqueValues(fields.secrets, used);
+      used.push(secret);
+
       return {
-        profession: getRandom(fields.professions),
-        health: getRandom(fields.health.filter(h => !h.includes("сексуальная") && !h.includes("репродуктивная"))),
-        phobia: getRandom(fields.phobias),
-        skill: getRandom(fields.skills),
-        inventory: getRandom(fields.inventory),
-        quality: getRandom(fields.qualities),
-        biography: getRandom(fields.biography),
-        secret: getRandom(fields.secrets)
+        profession,
+        health,
+        phobia,
+        skill,
+        inventory,
+        quality,
+        biography,
+        secret
       };
     }
 
@@ -349,11 +393,13 @@
       const count = Math.floor(Math.random() * (max - min + 1)) + min;
       const copy = [...arr];
       const result = [];
+
       for (let i = 0; i < count && copy.length > 0; i++) {
         const item = getRandom(copy);
         result.push(item);
         copy.splice(copy.indexOf(item), 1);
       }
+
       return result;
     }
 
