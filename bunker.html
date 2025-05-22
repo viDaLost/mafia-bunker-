@@ -329,18 +329,13 @@
     }
 
     function capitalizeFirstLetter(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1);
+      return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
     }
 
     function generateUniqueValues(arr, exclude = []) {
       const pool = arr.filter(item => !exclude.includes(item));
-      const result = [];
-
-      while (result.length < 1 && pool.length > 0) {
-        result.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
-      }
-
-      return result[0];
+      if (pool.length === 0) return "Неизвестно";
+      return pool[Math.floor(Math.random() * pool.length)];
     }
 
     function generateUniqueCharacter(fields) {
