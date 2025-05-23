@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="style.css" />
   <style>
     body {
-      color: white; /* Весь текст по умолчанию белый */
+      color: white;
+      font-family: 'Orbitron', sans-serif;
     }
 
     .card-grid {
@@ -74,12 +75,11 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.9);
-      display: flex;
+      background: rgba(0, 0, 0, 0.95);
+      display: none;
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      display: none;
     }
 
     .overlay.active {
@@ -88,14 +88,37 @@
 
     .overlay-content {
       background: #1e1e1e;
-      padding: 20px;
+      padding: 25px;
       border-radius: 12px;
       max-width: 400px;
       text-align: left;
+      z-index: 1001;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
     }
 
     .overlay-content button {
       margin-top: 15px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    /* Кнопки */
+    button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: none;
+      outline: none;
+    }
+
+    button:hover,
+    button:focus,
+    button:active {
+      background: transparent;
+      color: white;
     }
 
     /* Кнопки всегда внизу */
@@ -112,22 +135,6 @@
 
     .footer-buttons button {
       width: 45%;
-      font-size: 16px;
-      background: transparent;
-      border: none; /* Убрана обводка */
-      color: white;
-      cursor: pointer;
-      transition: none; /* Отключаем анимации */
-    }
-
-    /* Отключаем реакцию на hover и фокус */
-    .footer-buttons button:hover,
-    .footer-buttons button:active,
-    .footer-buttons button:focus {
-      background: transparent;
-      color: white;
-      outline: none;
-      box-shadow: none;
     }
 
     @media (max-width: 480px) {
@@ -169,10 +176,18 @@
     <div id="playerList" class="card-grid"></div>
   </div>
 
-  <!-- ЕДИНСТВЕННЫЕ кнопки "Главное меню" и "В начало игры" -->
+  <!-- ЕДИНСТВЕННЫЕ кнопки -->
   <div class="footer-buttons">
     <button onclick="goToMenu()">Главное меню</button>
     <button onclick="restartGame()">В начало игры</button>
+  </div>
+
+  <!-- Новое всплывающее окно для просмотра карточки -->
+  <div class="overlay" id="overlay">
+    <div class="overlay-content" id="overlayContent">
+      <div id="overlayCharacterData"></div>
+      <button onclick="closeOverlay()">Закрыть карточку</button>
+    </div>
   </div>
 
   <script>
@@ -190,18 +205,17 @@
       const supplies = await suppliesRes.json();
       const total = parseInt(document.getElementById("playerCount").value);
 
-      // Генерируем персонажей с уникальными полями
+      // Генерируем персонажей
       characters = Array.from({length: total}, () => generateUniqueCharacter(fields));
       localStorage.setItem("bunkerCharacters", JSON.stringify(characters));
 
       document.getElementById("setup").style.display = "none";
 
-      // Рассчитываем количество игроков
-      const playersToStay = Math.ceil(total * 0.2);  // Остаются 20%
+      // Рассчитываем раунды
+      const playersToStay = Math.ceil(total * 0.2);
       const playersToRemove = total - playersToStay;
-      const removalPlan = calculateRemoval(playersToRemove, 6); // Распределяем по раундам
+      const removalPlan = calculateRemoval(playersToRemove, 6);
 
-      // Показываем катастрофу и условия бункера
       const disaster = getRandom(disasters);
       const setting = getRandom(settings);
       const area = getRandom([
@@ -237,6 +251,7 @@
     function showCurrentPlayerCard() {
       const chars = JSON.parse(localStorage.getItem("bunkerCharacters"));
       if (currentCharacterIndex >= chars.length) return;
+
       const char = chars[currentCharacterIndex];
       let html = `<h3>Карточка игрока ${currentCharacterIndex + 1}:</h3>`;
       html += `<span class="label">Профессия:</span> ${capitalizeFirstLetter(char.profession)}<br/>`;
@@ -269,6 +284,7 @@
       document.getElementById("characterCard").style.display = "none";
       document.getElementById("playerCardContainer").style.display = "none";
       document.getElementById("allCardsShown").style.display = "block";
+
       const listDiv = document.getElementById("playerList");
       listDiv.innerHTML = "";
 
@@ -276,6 +292,7 @@
         const card = document.createElement("div");
         card.className = "flip-card";
         card.setAttribute("onclick", `openOverlay(${i})`);
+
         card.innerHTML = `
           <div class="flip-card-inner">
             <div class="flip-card-front">
@@ -299,36 +316,26 @@
 
     function openOverlay(index) {
       const char = characters[index];
-      let html = `<h3>Персонаж игрока ${index + 1}</h3>`;
-      html += `<span class="label">Профессия:</span> ${capitalizeFirstLetter(char.profession)}<br/>`;
-      html += `<span class="label">Здоровье:</span> ${capitalizeFirstLetter(char.health)}<br/>`;
-      html += `<span class="label">Фобия:</span> ${capitalizeFirstLetter(char.phobia)}<br/>`;
-      html += `<span class="label">Хобби / Навыки:</span> ${capitalizeFirstLetter(char.skill)}<br/>`;
-      html += `<span class="label">Инвентарь:</span> ${capitalizeFirstLetter(char.inventory)}<br/>`;
-      html += `<span class="label">Качество:</span> ${capitalizeFirstLetter(char.quality)}<br/>`;
-      html += `<span class="label">Биография:</span> ${capitalizeFirstLetter(char.biography)}<br/>`;
-      html += `<span class="label">Секрет:</span> ${capitalizeFirstLetter(char.secret)}<br/><br/>`;
-      html += `<button onclick="closeOverlay(this)">Закрыть карточку</button>`;
+      const overlay = document.getElementById("overlay");
+      const overlayData = document.getElementById("overlayCharacterData");
 
-      const existingOverlay = document.querySelector(".overlay-card.show");
-      if (existingOverlay) {
-        existingOverlay.classList.remove("show");
-        existingOverlay.style.display = "none";
-        existingOverlay.remove();
-      }
+      overlayData.innerHTML = `
+        <h3>Персонаж игрока ${index + 1}</h3>
+        <span class="label">Профессия:</span> ${capitalizeFirstLetter(char.profession)}<br/>
+        <span class="label">Здоровье:</span> ${capitalizeFirstLetter(char.health)}<br/>
+        <span class="label">Фобия:</span> ${capitalizeFirstLetter(char.phobia)}<br/>
+        <span class="label">Хобби / Навыки:</span> ${capitalizeFirstLetter(char.skill)}<br/>
+        <span class="label">Инвентарь:</span> ${capitalizeFirstLetter(char.inventory)}<br/>
+        <span class="label">Качество:</span> ${capitalizeFirstLetter(char.quality)}<br/>
+        <span class="label">Биография:</span> ${capitalizeFirstLetter(char.biography)}<br/>
+        <span class="label">Секрет:</span> ${capitalizeFirstLetter(char.secret)}<br/><br/>
+      `;
 
-      const overlay = document.createElement("div");
-      overlay.className = "card overlay-card show";
-      overlay.style.display = "block";
-      overlay.innerHTML = html;
-
-      const container = document.getElementById("allCardsShown");
-      container.appendChild(overlay);
+      overlay.classList.add("active");
     }
 
-    function closeOverlay(el) {
-      el.parentElement.style.display = "none";
-      el.parentElement.classList.remove("show");
+    function closeOverlay() {
+      document.getElementById("overlay").classList.remove("active");
     }
 
     function goToMenu() {
@@ -345,8 +352,7 @@
 
     function generateUniqueValues(arr, exclude = []) {
       const pool = arr.filter(item => !exclude.includes(item));
-      if (pool.length === 0) return "Неизвестно";
-      return pool[Math.floor(Math.random() * pool.length)];
+      return pool[Math.floor(Math.random() * pool.length)] || "Неизвестно";
     }
 
     function generateUniqueCharacter(fields) {
@@ -370,16 +376,7 @@
       used.push(biography);
       const secret = generateUniqueValues(fields.secrets, used);
       used.push(secret);
-      return {
-        profession,
-        health,
-        phobia,
-        skill,
-        inventory,
-        quality,
-        biography,
-        secret
-      };
+      return {profession, health, phobia, skill, inventory, quality, biography, secret};
     }
 
     function getRandom(arr) {
@@ -395,7 +392,7 @@
         result.push(item);
         copy.splice(copy.indexOf(item), 1);
       }
-      return result;
+      return result.join(', ');
     }
 
     function calculateRemoval(totalRemove, rounds) {
