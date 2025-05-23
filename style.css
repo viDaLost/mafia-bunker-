@@ -1,20 +1,10 @@
-body.mafia-bg {
-  background-image: url('images/mafia-background.jpg'); /* Путь к вашему изображению */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-
+body.mafia-bg,
 body.bunker-bg {
-  background-image: url('images/bunker-background.jpg'); /* Путь к вашему изображению */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  background: linear-gradient(#0f0f0f, #1a1a1a);
+  color: white;
+  font-family: 'Orbitron', sans-serif;
 }
 
-/* === Ввод чисел === */
 input[type="number"] {
   font-size: 18px;
   padding: 10px 20px;
@@ -30,27 +20,24 @@ input[type="number"] {
   text-align: center;
 }
 
-/* === Кнопки === */
 button {
   display: block;
   margin: 15px auto;
-  background: transparent;
-  border: 2px solid #ffffff;
+  background: #ff0033;
+  border: none;
   color: white;
+  font-size: 18px;
   padding: 12px 24px;
-  font-size: 16px;
   cursor: pointer;
   border-radius: 25px;
   transition: all 0.3s ease;
+  -webkit-tap-highlight-color: rgba(0,0,0,0); /* Отключение подсветки на мобильных */
 }
 
 button:hover {
-  background: #ff0033;
-  color: black;
-  border-color: #ff0033;
+  background: #e60029;
 }
 
-/* === Карточки === */
 .card {
   background: #1e1e1e;
   border: 1px solid #444;
@@ -65,7 +52,6 @@ button:hover {
   color: white;
 }
 
-/* === Заголовки внутри карточек === */
 .label {
   font-weight: bold;
   font-size: 18px;
@@ -74,7 +60,6 @@ button:hover {
   margin-top: 10px;
 }
 
-/* === Информационные блоки === */
 .disaster-info,
 .bunker-info {
   font-size: 17px;
@@ -93,7 +78,6 @@ button:hover {
   margin-top: 10px;
 }
 
-/* === Дополнительные стили для сетки карточек === */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
