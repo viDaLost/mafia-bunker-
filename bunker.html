@@ -113,18 +113,21 @@
     .footer-buttons button {
       width: 45%;
       font-size: 16px;
-      background-color: transparent;
-      border: 2px solid #777;
+      background: transparent;
+      border: none; /* Убрана обводка */
       color: white;
-      border-radius: 25px;
-      padding: 12px 24px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: none; /* Отключаем анимации */
     }
 
-    .footer-buttons button:hover {
-      background-color: #777;
-      color: black;
+    /* Отключаем реакцию на hover и фокус */
+    .footer-buttons button:hover,
+    .footer-buttons button:active,
+    .footer-buttons button:focus {
+      background: transparent;
+      color: white;
+      outline: none;
+      box-shadow: none;
     }
 
     @media (max-width: 480px) {
@@ -268,6 +271,7 @@
       document.getElementById("allCardsShown").style.display = "block";
       const listDiv = document.getElementById("playerList");
       listDiv.innerHTML = "";
+
       characters.forEach((char, i) => {
         const card = document.createElement("div");
         card.className = "flip-card";
@@ -305,16 +309,19 @@
       html += `<span class="label">Биография:</span> ${capitalizeFirstLetter(char.biography)}<br/>`;
       html += `<span class="label">Секрет:</span> ${capitalizeFirstLetter(char.secret)}<br/><br/>`;
       html += `<button onclick="closeOverlay(this)">Закрыть карточку</button>`;
+
       const existingOverlay = document.querySelector(".overlay-card.show");
       if (existingOverlay) {
         existingOverlay.classList.remove("show");
         existingOverlay.style.display = "none";
         existingOverlay.remove();
       }
+
       const overlay = document.createElement("div");
       overlay.className = "card overlay-card show";
       overlay.style.display = "block";
       overlay.innerHTML = html;
+
       const container = document.getElementById("allCardsShown");
       container.appendChild(overlay);
     }
