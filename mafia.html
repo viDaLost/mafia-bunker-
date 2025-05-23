@@ -36,18 +36,23 @@
       display: block;
       margin: 15px auto;
       background: transparent;
-      border: 2px solid #777;
+      border: none; /* Обводка полностью убрана */
       color: white;
-      padding: 12px 24px;
       font-size: 16px;
+      padding: 12px 24px;
       cursor: pointer;
       border-radius: 25px;
-      transition: all 0.3s ease;
+      transition: none; /* Отключаем все анимации */
     }
 
-    button:hover {
-      background: #777;
-      color: black;
+    /* Отключаем реакцию на hover и фокус */
+    button:hover,
+    button:active,
+    button:focus {
+      background: transparent;
+      color: white;
+      outline: none;
+      box-shadow: none;
     }
 
     .card {
