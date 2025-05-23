@@ -3,82 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Выбери игру</title>
+  <title>Выберите игру</title>
   <style>
-    body {
+    * {
       margin: 0;
       padding: 0;
-      background-color: #1c1b26;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #0f0f0f, #1a1a1a);
       font-family: 'Arial', sans-serif;
+      color: white;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      height: 100vh;
-      color: #f2f2f2;
+      padding: 30px 20px;
+      min-height: 100vh;
     }
 
     h1 {
-      margin-top: 40px;
-      font-size: 32px;
-      color: #f2f2f2;
+      font-size: 28px;
+      margin-bottom: 30px;
+      text-align: center;
+      color: #ff0040;
+      text-shadow: 0 0 10px #ff0040;
     }
 
     .menu {
-      margin-top: 30px;
       display: flex;
       flex-direction: column;
       gap: 20px;
-      width: 90%;
+      width: 100%;
       max-width: 400px;
     }
 
-    .game-button {
+    .game-card {
       position: relative;
-      width: 100%;
-      cursor: pointer;
-      border-radius: 20px;
+      border-radius: 15px;
       overflow: hidden;
-      transition: transform 0.1s ease;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      box-shadow: 0 0 15px rgba(255, 0, 64, 0.4);
     }
 
-    .game-button:active {
-      transform: scale(0.96);
+    .game-card:active {
+      transform: scale(0.97);
     }
 
-    .game-image {
+    .game-card img {
       width: 100%;
       display: block;
+      border-radius: 15px;
     }
 
-    .overlay {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      color: #f2f2f2;
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-      padding: 12px;
-      font-family: 'Courier New', monospace;
-    }
-
-    .game-button:hover .overlay {
-      background: rgba(255, 255, 255, 0.1);
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 22px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Выбери игру</h1>
+  <h1>Выберите игру</h1>
   <div class="menu">
-    <div class="game-button" onclick="location.href='mafia.html'">
-      <img class="game-image" src="menu.png" alt="Мафия и Бункер" />
-      <div class="overlay">Мафия</div>
+    <div class="game-card" onclick="window.location.href='mafia.html'">
+      <img src="mafia.png" alt="Мафия">
     </div>
-    <div class="game-button" onclick="location.href='bunker.html'">
-      <img class="game-image" src="menu.png" alt="Мафия и Бункер" />
-      <div class="overlay">Бункер</div>
+    <div class="game-card" onclick="window.location.href='bunker.html'">
+      <img src="bunker.png" alt="Бункер">
     </div>
   </div>
 </body>
