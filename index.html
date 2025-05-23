@@ -4,9 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Мафия / Бункер</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron :wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
 
-  <!-- Только для главного меню -->
   <style>
     * {
       margin: 0;
@@ -15,10 +14,9 @@
     }
 
     body {
-      margin: 0;
-      padding: 0;
       font-family: 'Orbitron', sans-serif;
-      background: linear-gradient(to bottom, #0f0f0f, #1a1a1a);
+      background: url('78AD05A3-ED01-416A-8359-A8A0D6E33F43.jpeg') no-repeat center center fixed;
+      background-size: cover;
       color: white;
       min-height: 100vh;
       display: flex;
@@ -31,6 +29,8 @@
       max-width: 400px;
       padding: 30px 20px;
       text-align: center;
+      background-color: rgba(0, 0, 0, 0.65);
+      border-radius: 20px;
       animation: fadeIn 1s ease-in-out;
     }
 
@@ -41,7 +41,7 @@
       text-shadow: 0 0 10px #ff0040;
     }
 
-    button {
+    .game-button {
       width: 100%;
       background: transparent;
       border: 2px solid #ff0040;
@@ -53,13 +53,22 @@
       cursor: pointer;
       transition: all 0.3s ease;
       box-shadow: 0 0 10px #ff0040;
+      position: relative;
     }
 
-    button:hover {
+    .game-button:hover {
       background-color: #ff0040;
       color: black;
       transform: scale(1.02);
       box-shadow: 0 0 20px #ff0040;
+    }
+
+    .icon {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 30px;
+      height: 30px;
     }
 
     @keyframes fadeIn {
@@ -69,15 +78,21 @@
 
     @media (max-width: 480px) {
       .title { font-size: 22px; }
-      button { font-size: 16px; padding: 12px; }
+      .game-button { font-size: 16px; padding: 12px; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1 class="title">Выберите игру</h1>
-    <button onclick="window.location.href='mafia.html'">Мафия</button>
-    <button onclick="window.location.href='bunker.html'">Бункер</button>
+    <button class="game-button" onclick="window.location.href='mafia.html'">
+      Мафия
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Fedora_font_awesome.svg/32px-Fedora_font_awesome.svg.png" class="icon" alt="Hat">
+    </button>
+    <button class="game-button" onclick="window.location.href='bunker.html'">
+      Бункер
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Radioactive.svg/32px-Radioactive.svg.png" class="icon" alt="Radiation">
+    </button>
   </div>
 </body>
 </html>
