@@ -7,6 +7,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron :wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <style>
+    body {
+      color: white; /* Весь текст по умолчанию белый */
+    }
+
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -109,6 +113,18 @@
     .footer-buttons button {
       width: 45%;
       font-size: 16px;
+      background-color: transparent;
+      border: 2px solid #777;
+      color: white;
+      border-radius: 25px;
+      padding: 12px 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .footer-buttons button:hover {
+      background-color: #777;
+      color: black;
     }
 
     @media (max-width: 480px) {
@@ -165,12 +181,10 @@
       const settingsRes = await fetch('data/bunker-settings.json');
       const fieldsRes = await fetch('data/fields.json');
       const suppliesRes = await fetch('data/supplies.json');
-
       const disasters = await disasterRes.json();
       const settings = await settingsRes.json();
       const fields = await fieldsRes.json();
       const supplies = await suppliesRes.json();
-
       const total = parseInt(document.getElementById("playerCount").value);
 
       // Генерируем персонажей с уникальными полями
@@ -187,7 +201,6 @@
       // Показываем катастрофу и условия бункера
       const disaster = getRandom(disasters);
       const setting = getRandom(settings);
-
       const area = getRandom([
         "Площадь бункера — 50 квадратных метров, одноэтажный",
         "Площадь бункера — 80 квадратных метров, одноэтажный",
@@ -195,7 +208,6 @@
         "Площадь бункера — 160 квадратных метров, одноэтажный",
         "Площадь бункера — 200 квадратных метров, двухэтажный"
       ]);
-
       const randomSupplies = getRandomMultiple(supplies, 2, 4).join(', ');
 
       document.getElementById("disasterText").innerHTML = `<strong>Катастрофа:</strong> ${disaster.type} — ${disaster.description}`;
@@ -222,7 +234,6 @@
     function showCurrentPlayerCard() {
       const chars = JSON.parse(localStorage.getItem("bunkerCharacters"));
       if (currentCharacterIndex >= chars.length) return;
-
       const char = chars[currentCharacterIndex];
       let html = `<h3>Карточка игрока ${currentCharacterIndex + 1}:</h3>`;
       html += `<span class="label">Профессия:</span> ${capitalizeFirstLetter(char.profession)}<br/>`;
@@ -255,15 +266,12 @@
       document.getElementById("characterCard").style.display = "none";
       document.getElementById("playerCardContainer").style.display = "none";
       document.getElementById("allCardsShown").style.display = "block";
-
       const listDiv = document.getElementById("playerList");
       listDiv.innerHTML = "";
-
       characters.forEach((char, i) => {
         const card = document.createElement("div");
         card.className = "flip-card";
         card.setAttribute("onclick", `openOverlay(${i})`);
-
         card.innerHTML = `
           <div class="flip-card-inner">
             <div class="flip-card-front">
@@ -287,7 +295,6 @@
 
     function openOverlay(index) {
       const char = characters[index];
-
       let html = `<h3>Персонаж игрока ${index + 1}</h3>`;
       html += `<span class="label">Профессия:</span> ${capitalizeFirstLetter(char.profession)}<br/>`;
       html += `<span class="label">Здоровье:</span> ${capitalizeFirstLetter(char.health)}<br/>`;
@@ -298,19 +305,16 @@
       html += `<span class="label">Биография:</span> ${capitalizeFirstLetter(char.biography)}<br/>`;
       html += `<span class="label">Секрет:</span> ${capitalizeFirstLetter(char.secret)}<br/><br/>`;
       html += `<button onclick="closeOverlay(this)">Закрыть карточку</button>`;
-
       const existingOverlay = document.querySelector(".overlay-card.show");
       if (existingOverlay) {
         existingOverlay.classList.remove("show");
         existingOverlay.style.display = "none";
         existingOverlay.remove();
       }
-
       const overlay = document.createElement("div");
       overlay.className = "card overlay-card show";
       overlay.style.display = "block";
       overlay.innerHTML = html;
-
       const container = document.getElementById("allCardsShown");
       container.appendChild(overlay);
     }
@@ -340,34 +344,25 @@
 
     function generateUniqueCharacter(fields) {
       const used = [];
-
       const profession = generateUniqueValues(fields.professions, used);
       used.push(profession);
-
       const health = generateUniqueValues(
         fields.health.filter(h => !h.includes("сексуальная") && !h.includes("репродуктивная")),
         used
       );
       used.push(health);
-
       const phobia = generateUniqueValues(fields.phobias, used);
       used.push(phobia);
-
       const skill = generateUniqueValues(fields.skills, used);
       used.push(skill);
-
       const inventory = generateUniqueValues(fields.inventory, used);
       used.push(inventory);
-
       const quality = generateUniqueValues(fields.qualities, used);
       used.push(quality);
-
       const biography = generateUniqueValues(fields.biography, used);
       used.push(biography);
-
       const secret = generateUniqueValues(fields.secrets, used);
       used.push(secret);
-
       return {
         profession,
         health,
@@ -388,13 +383,11 @@
       const count = Math.floor(Math.random() * (max - min + 1)) + min;
       const copy = [...arr];
       const result = [];
-
       for (let i = 0; i < count && copy.length > 0; i++) {
         const item = getRandom(copy);
         result.push(item);
         copy.splice(copy.indexOf(item), 1);
       }
-
       return result;
     }
 
