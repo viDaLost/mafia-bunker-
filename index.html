@@ -1,55 +1,85 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Главное меню</title>
-<style>
-  body {
-    margin: 0;
-    background-color: #1a1324;
-    font-family: sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  .menu {
-    position: relative;
-    width: 90vw;
-    max-width: 800px;
-  }
-  .btn {
-    position: absolute;
-    width: 45%;
-    height: 70%;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    transition: transform 0.1s ease;
-  }
-  .btn:active {
-    transform: scale(0.96);
-  }
-  .mafia {
-    left: 0;
-  }
-  .bunker {
-    right: 0;
-  }
-  .background {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Выбери игру</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #1c1b26;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      color: #f2f2f2;
+    }
+
+    h1 {
+      margin-top: 40px;
+      font-size: 32px;
+      color: #f2f2f2;
+    }
+
+    .menu {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .game-button {
+      position: relative;
+      width: 100%;
+      cursor: pointer;
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform 0.1s ease;
+    }
+
+    .game-button:active {
+      transform: scale(0.96);
+    }
+
+    .game-image {
+      width: 100%;
+      display: block;
+    }
+
+    .overlay {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      color: #f2f2f2;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      padding: 12px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .game-button:hover .overlay {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  </style>
 </head>
 <body>
+  <h1>Выбери игру</h1>
   <div class="menu">
-    <img src="menu.png" alt="меню" class="background">
-    <button class="btn mafia" onclick="location.href='mafia.html'"></button>
-    <button class="btn bunker" onclick="location.href='bunker.html'"></button>
+    <div class="game-button" onclick="location.href='mafia.html'">
+      <img class="game-image" src="menu.png" alt="Мафия и Бункер" />
+      <div class="overlay">Мафия</div>
+    </div>
+    <div class="game-button" onclick="location.href='bunker.html'">
+      <img class="game-image" src="menu.png" alt="Мафия и Бункер" />
+      <div class="overlay">Бункер</div>
+    </div>
   </div>
 </body>
 </html>
