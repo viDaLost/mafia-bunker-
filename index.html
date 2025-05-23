@@ -4,32 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Главная</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron :wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       padding: 0;
-      background-color: #1e1e1e;
+      background: url('background.jpg') no-repeat center center fixed;
+      background-size: cover;
       color: white;
       font-family: 'Orbitron', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start; /* Выравнивание по верху */
+      justify-content: flex-start;
       height: 100vh;
       text-align: center;
+      backdrop-filter: brightness(0.9) blur(1px);
     }
 
     h1 {
-      font-size: 2.5em; /* В два раза больше стандартного текста */
+      font-size: 2.5em;
       margin-top: 40px;
       margin-bottom: 60px;
+      text-shadow: 0 0 8px #000;
     }
 
     .game-container {
       display: flex;
       justify-content: center;
-      gap: 100px; /* Большое расстояние между иконками */
+      gap: 100px;
       flex-wrap: wrap;
       margin-top: 40px;
     }
@@ -42,6 +45,7 @@
       border-radius: 16px;
       cursor: pointer;
       transition: transform 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     }
 
     .game-icon:hover {
@@ -55,14 +59,23 @@
     .bunker-icon {
       background-image: url('bunker.png');
     }
+
+    @media (max-width: 480px) {
+      .game-container {
+        gap: 40px;
+      }
+
+      .game-icon {
+        width: 120px;
+        height: 120px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Надпись сверху -->
   <h1>Выберите игру</h1>
 
-  <!-- Контейнер с иконками по центру -->
   <div class="game-container">
     <a href="mafia.html" class="game-icon mafia-icon" title="Мафия"></a>
     <a href="bunker.html" class="game-icon bunker-icon" title="Бункер"></a>
