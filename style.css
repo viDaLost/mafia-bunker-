@@ -1,8 +1,17 @@
-body.mafia-bg,
+body.mafia-bg {
+  background-image: url('images/mafia-background.jpg'); /* Путь к вашему изображению */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 body.bunker-bg {
-  background: linear-gradient(#0f0f0f, #1a1a1a);
-  color: white;
-  font-family: 'Orbitron', sans-serif;
+  background-image: url('images/bunker-background.jpg'); /* Путь к вашему изображению */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 input[type="number"] {
