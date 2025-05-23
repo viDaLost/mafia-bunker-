@@ -33,7 +33,7 @@ button {
   display: block;
   margin: 15px auto;
   background: transparent;
-  border: 2px solid #ff0033;
+  border: 2px solid #ffffff;
   color: white;
   padding: 12px 24px;
   font-size: 16px;
@@ -48,7 +48,7 @@ button:hover {
 }
 
 .card {
-  background: #1e1e1e;
+  background: #ffffff;
   border: 1px solid #444;
   padding: 20px;
   border-radius: 12px;
