@@ -63,7 +63,7 @@ button:hover {
 .label {
   font-weight: bold;
   font-size: 18px;
-  color: #ff0033;
+  color: #ffffff;
   display: block;
   margin-top: 10px;
 }
@@ -81,6 +81,6 @@ button:hover {
 .bunker-info strong {
   display: block;
   font-size: 18px;
-  color: #ff0033;
+  color: #ffffff;
   margin-top: 10px;
 }
