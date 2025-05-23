@@ -1,98 +1,55 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Мафия / Бункер</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
-
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Orbitron', sans-serif;
-      background: url('78AD05A3-ED01-416A-8359-A8A0D6E33F43.jpeg') no-repeat center center fixed;
-      background-size: cover;
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 400px;
-      padding: 30px 20px;
-      text-align: center;
-      background-color: rgba(0, 0, 0, 0.65);
-      border-radius: 20px;
-      animation: fadeIn 1s ease-in-out;
-    }
-
-    .title {
-      font-size: 24px;
-      margin-bottom: 40px;
-      color: #ff0040;
-      text-shadow: 0 0 10px #ff0040;
-    }
-
-    .game-button {
-      width: 100%;
-      background: transparent;
-      border: 2px solid #ff0040;
-      color: white;
-      padding: 14px;
-      font-size: 18px;
-      margin-bottom: 20px;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 10px #ff0040;
-      position: relative;
-    }
-
-    .game-button:hover {
-      background-color: #ff0040;
-      color: black;
-      transform: scale(1.02);
-      box-shadow: 0 0 20px #ff0040;
-    }
-
-    .icon {
-      position: absolute;
-      top: -10px;
-      right: -10px;
-      width: 30px;
-      height: 30px;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 480px) {
-      .title { font-size: 22px; }
-      .game-button { font-size: 16px; padding: 12px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Главное меню</title>
+<style>
+  body {
+    margin: 0;
+    background-color: #1a1324;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .menu {
+    position: relative;
+    width: 90vw;
+    max-width: 800px;
+  }
+  .btn {
+    position: absolute;
+    width: 45%;
+    height: 70%;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+  .btn:active {
+    transform: scale(0.96);
+  }
+  .mafia {
+    left: 0;
+  }
+  .bunker {
+    right: 0;
+  }
+  .background {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1 class="title">Выберите игру</h1>
-    <button class="game-button" onclick="window.location.href='mafia.html'">
-      Мафия
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Fedora_font_awesome.svg/32px-Fedora_font_awesome.svg.png" class="icon" alt="Hat">
-    </button>
-    <button class="game-button" onclick="window.location.href='bunker.html'">
-      Бункер
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Radioactive.svg/32px-Radioactive.svg.png" class="icon" alt="Radiation">
-    </button>
+  <div class="menu">
+    <img src="menu.png" alt="меню" class="background">
+    <button class="btn mafia" onclick="location.href='mafia.html'"></button>
+    <button class="btn bunker" onclick="location.href='bunker.html'"></button>
   </div>
 </body>
 </html>
