@@ -38,7 +38,7 @@
       background: transparent;
       border: none;
       color: white;
-      font-size: 25px;
+      font-size: 21px;
       font-weight: bold;
       cursor: pointer;
       transition: none;
@@ -80,17 +80,20 @@
       text-align: left;
       max-width: 400px;
       margin: 0 auto 20px auto;
+      background-color: #ccc; /* Светло-серый фон */
+      color: black;
+      padding: 15px;
+      border-radius: 12px;
     }
 
     .disaster-info strong,
     .bunker-info strong {
       display: block;
       font-size: 18px;
-      color: #ffffff;
+      color: black;
       margin-top: 10px;
     }
 
-    /* Сетка карточек */
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -101,7 +104,6 @@
       margin-right: auto;
     }
 
-    /* Карточки игроков */
     .flip-card {
       width: 100%;
       height: 140px;
@@ -148,7 +150,6 @@
       font-size: 14px;
     }
 
-    /* Всплывающее окно */
     .overlay {
       position: fixed;
       top: 0;
@@ -185,7 +186,6 @@
       font-weight: bold;
     }
 
-    /* Кнопки внизу страницы */
     .footer-buttons {
       position: relative;
       margin-top: 40px;
@@ -199,7 +199,7 @@
 
     .footer-buttons button {
       width: 45%;
-      font-size: 25px;
+      font-size: 21px;
       font-weight: bold;
     }
 
@@ -219,7 +219,7 @@
     <button onclick="startBunker()">Начать игру</button>
   </div>
 
-  <!-- Шаг 2: Катастрофа и условия бункера -->
+  <!-- Шаг 2: Катастрофа и описание бункера -->
   <div id="disasterInfo" style="display: none;">
     <h2>Катастрофа произошла!</h2>
     <div class="disaster-info" id="disasterText"></div>
@@ -242,13 +242,13 @@
     <div id="playerList" class="card-grid"></div>
   </div>
 
-  <!-- ЕДИНСТВЕННЫЕ кнопки -->
+  <!-- Кнопки внизу -->
   <div class="footer-buttons">
     <button onclick="goToMenu()">Главное меню</button>
     <button onclick="restartGame()">В начало игры</button>
   </div>
 
-  <!-- Модальное окно для просмотра карточки -->
+  <!-- Модальное окно -->
   <div class="overlay" id="overlay">
     <div class="overlay-content" id="overlayContent"></div>
   </div>
@@ -270,13 +270,11 @@
 
       const total = parseInt(document.getElementById("playerCount").value);
 
-      // Генерируем персонажей
       characters = Array.from({length: total}, () => generateUniqueCharacter(fields));
       localStorage.setItem("bunkerCharacters", JSON.stringify(characters));
 
       document.getElementById("setup").style.display = "none";
 
-      // Рассчитываем параметры игры
       const playersToStay = Math.ceil(total * 0.2);
       const playersToRemove = total - playersToStay;
       const removalPlan = calculateRemoval(playersToRemove, 6);
@@ -304,7 +302,6 @@
         Исключено за игру: ${playersToRemove}<br/>
         Исключения по раундам: ${removalPlan.join(', ')}
       `;
-
       document.getElementById("disasterInfo").style.display = "block";
     }
 
@@ -401,8 +398,7 @@
     }
 
     function closeOverlay() {
-      const overlay = document.getElementById("overlay");
-      overlay.classList.remove("active");
+      document.getElementById("overlay").classList.remove("active");
     }
 
     function goToMenu() {
@@ -424,25 +420,17 @@
 
     function generateUniqueCharacter(fields) {
       const used = [];
-      const profession = generateUniqueValues(fields.professions, used);
-      used.push(profession);
+      const profession = generateUniqueValues(fields.professions, used); used.push(profession);
       const health = generateUniqueValues(
         fields.health.filter(h => !h.includes("сексуальная") && !h.includes("репродуктивная")),
         used
-      );
-      used.push(health);
-      const phobia = generateUniqueValues(fields.phobias, used);
-      used.push(phobia);
-      const skill = generateUniqueValues(fields.skills, used);
-      used.push(skill);
-      const inventory = generateUniqueValues(fields.inventory, used);
-      used.push(inventory);
-      const quality = generateUniqueValues(fields.qualities, used);
-      used.push(quality);
-      const biography = generateUniqueValues(fields.biography, used);
-      used.push(biography);
-      const secret = generateUniqueValues(fields.secrets, used);
-      used.push(secret);
+      ); used.push(health);
+      const phobia = generateUniqueValues(fields.phobias, used); used.push(phobia);
+      const skill = generateUniqueValues(fields.skills, used); used.push(skill);
+      const inventory = generateUniqueValues(fields.inventory, used); used.push(inventory);
+      const quality = generateUniqueValues(fields.qualities, used); used.push(quality);
+      const biography = generateUniqueValues(fields.biography, used); used.push(biography);
+      const secret = generateUniqueValues(fields.secrets, used); used.push(secret);
       return {profession, health, phobia, skill, inventory, quality, biography, secret};
     }
 
