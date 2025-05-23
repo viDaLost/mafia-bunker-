@@ -8,10 +8,89 @@
   <link rel="stylesheet" href="style.css" />
   <style>
     body {
-      color: white;
+      margin: 0;
+      padding: 0;
       font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(#0f0f0f, #1a1a1a);
+      color: white;
+      text-align: center;
+      padding: 40px;
     }
 
+    input[type="number"] {
+      font-size: 18px;
+      padding: 10px 20px;
+      border-radius: 25px;
+      border: none;
+      outline: none;
+      margin: 10px auto;
+      display: block;
+      width: 80%;
+      max-width: 300px;
+      background-color: #222;
+      color: white;
+      text-align: center;
+    }
+
+    button {
+      display: block;
+      margin: 15px auto;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: none;
+      outline: none;
+    }
+
+    button:hover,
+    button:active,
+    button:focus {
+      background: transparent;
+      color: white;
+    }
+
+    .card {
+      background: #1e1e1e;
+      border: 1px solid #444;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      text-align: left;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 16px;
+    }
+
+    .label {
+      font-weight: bold;
+      font-size: 18px;
+      color: #ffffff;
+      display: block;
+      margin-top: 10px;
+    }
+
+    .disaster-info,
+    .bunker-info {
+      font-size: 17px;
+      line-height: 1.6;
+      text-align: left;
+      max-width: 400px;
+      margin: 0 auto 20px auto;
+    }
+
+    .disaster-info strong,
+    .bunker-info strong {
+      display: block;
+      font-size: 18px;
+      color: #ffffff;
+      margin-top: 10px;
+    }
+
+    /* Сетка карточек */
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -22,6 +101,7 @@
       margin-right: auto;
     }
 
+    /* Карточки игроков */
     .flip-card {
       width: 100%;
       height: 140px;
@@ -93,7 +173,10 @@
       max-width: 400px;
       text-align: left;
       z-index: 1001;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .overlay-content .label {
+      font-size: 16px;
     }
 
     .overlay-content button {
@@ -102,26 +185,7 @@
       font-weight: bold;
     }
 
-    /* Кнопки */
-    button {
-      background: transparent;
-      border: none;
-      color: white;
-      font-size: 25px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: none;
-      outline: none;
-    }
-
-    button:hover,
-    button:focus,
-    button:active {
-      background: transparent;
-      color: white;
-    }
-
-    /* Кнопки всегда внизу */
+    /* Кнопки внизу страницы */
     .footer-buttons {
       position: relative;
       margin-top: 40px;
@@ -135,6 +199,8 @@
 
     .footer-buttons button {
       width: 45%;
+      font-size: 25px;
+      font-weight: bold;
     }
 
     @media (max-width: 480px) {
@@ -153,7 +219,7 @@
     <button onclick="startBunker()">Начать игру</button>
   </div>
 
-  <!-- Шаг 2: Катастрофа и описание бункера -->
+  <!-- Шаг 2: Катастрофа и условия бункера -->
   <div id="disasterInfo" style="display: none;">
     <h2>Катастрофа произошла!</h2>
     <div class="disaster-info" id="disasterText"></div>
@@ -182,12 +248,9 @@
     <button onclick="restartGame()">В начало игры</button>
   </div>
 
-  <!-- Новое всплывающее окно для просмотра карточки -->
+  <!-- Модальное окно для просмотра карточки -->
   <div class="overlay" id="overlay">
-    <div class="overlay-content" id="overlayContent">
-      <div id="overlayCharacterData"></div>
-      <button onclick="closeOverlay()">Закрыть карточку</button>
-    </div>
+    <div class="overlay-content" id="overlayContent"></div>
   </div>
 
   <script>
@@ -199,10 +262,12 @@
       const settingsRes = await fetch('data/bunker-settings.json');
       const fieldsRes = await fetch('data/fields.json');
       const suppliesRes = await fetch('data/supplies.json');
+
       const disasters = await disasterRes.json();
       const settings = await settingsRes.json();
       const fields = await fieldsRes.json();
       const supplies = await suppliesRes.json();
+
       const total = parseInt(document.getElementById("playerCount").value);
 
       // Генерируем персонажей
@@ -211,7 +276,7 @@
 
       document.getElementById("setup").style.display = "none";
 
-      // Рассчитываем раунды
+      // Рассчитываем параметры игры
       const playersToStay = Math.ceil(total * 0.2);
       const playersToRemove = total - playersToStay;
       const removalPlan = calculateRemoval(playersToRemove, 6);
@@ -239,6 +304,7 @@
         Исключено за игру: ${playersToRemove}<br/>
         Исключения по раундам: ${removalPlan.join(', ')}
       `;
+
       document.getElementById("disasterInfo").style.display = "block";
     }
 
@@ -292,7 +358,6 @@
         const card = document.createElement("div");
         card.className = "flip-card";
         card.setAttribute("onclick", `openOverlay(${i})`);
-
         card.innerHTML = `
           <div class="flip-card-inner">
             <div class="flip-card-front">
@@ -317,9 +382,9 @@
     function openOverlay(index) {
       const char = characters[index];
       const overlay = document.getElementById("overlay");
-      const overlayData = document.getElementById("overlayCharacterData");
+      const overlayContent = document.getElementById("overlayContent");
 
-      overlayData.innerHTML = `
+      overlayContent.innerHTML = `
         <h3>Персонаж игрока ${index + 1}</h3>
         <span class="label">Профессия:</span> ${capitalizeFirstLetter(char.profession)}<br/>
         <span class="label">Здоровье:</span> ${capitalizeFirstLetter(char.health)}<br/>
@@ -329,13 +394,15 @@
         <span class="label">Качество:</span> ${capitalizeFirstLetter(char.quality)}<br/>
         <span class="label">Биография:</span> ${capitalizeFirstLetter(char.biography)}<br/>
         <span class="label">Секрет:</span> ${capitalizeFirstLetter(char.secret)}<br/><br/>
+        <button onclick="closeOverlay()">Закрыть карточку</button>
       `;
 
       overlay.classList.add("active");
     }
 
     function closeOverlay() {
-      document.getElementById("overlay").classList.remove("active");
+      const overlay = document.getElementById("overlay");
+      overlay.classList.remove("active");
     }
 
     function goToMenu() {
@@ -392,7 +459,7 @@
         result.push(item);
         copy.splice(copy.indexOf(item), 1);
       }
-      return result.join(', ');
+      return result;
     }
 
     function calculateRemoval(totalRemove, rounds) {
