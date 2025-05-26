@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Главная</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <link rel="manifest" href="./manifest.json">
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: url('background.jpg') no-repeat center center fixed;
+      background: url('./background.jpg') no-repeat center center fixed;
       background-size: cover;
       color: white;
       font-family: 'Orbitron', sans-serif;
@@ -53,11 +54,11 @@
     }
 
     .mafia-icon {
-      background-image: url('mafia.png');
+      background-image: url('./mafia.png');
     }
 
     .bunker-icon {
-      background-image: url('bunker.png');
+      background-image: url('./bunker.png');
     }
 
     @media (max-width: 480px) {
@@ -80,6 +81,14 @@
     <a href="mafia.html" class="game-icon mafia-icon" title="Мафия"></a>
     <a href="bunker.html" class="game-icon bunker-icon" title="Бункер"></a>
   </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(reg => console.log('Service Worker зарегистрирован'))
+        .catch(err => console.error('Ошибка регистрации Service Worker:', err));
+    }
+  </script>
 
 </body>
 </html>
