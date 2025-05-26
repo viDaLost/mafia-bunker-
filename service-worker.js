@@ -5,8 +5,8 @@ const urlsToCache = [
   './background.jpg',
   './bunker.png',
   './mafia.png',
-  './images/bunkerBackground.jpg',
-  './images/mafiaBackground.jpg',
+  './images/bunker-background.jpg',
+  './images/mafia-background.jpg',
   './styles.css',      // если есть
   './main.js'          // если есть
 ];
