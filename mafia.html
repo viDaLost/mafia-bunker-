@@ -4,36 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Мафия</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron :wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron       :wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-
   <style>
-    /* === Сплеш-экран при загрузке === */
-    #splash {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-image: url('images/mafia-splash.jpg'); /* Путь к вашему изображению */
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      opacity: 1;
-      transition: opacity 0.5s ease;
-      pointer-events: none;
-    }
-
-    #splash h2 {
-      font-size: 24px;
-      color: white;
-      text-shadow: 0 0 10px black;
-    }
-
-    /* === Основные стили игры === */
     body {
       margin: 0;
       padding: 0;
@@ -64,20 +37,23 @@
       display: block;
       margin: 15px auto;
       background: transparent;
-      border: none;
+      border: none; /* Обводка полностью убрана */
       color: white;
-      font-size: 21px;
-      font-weight: bold;
+      font-size: 21px; /* Увеличенный размер текста на кнопках */
+      font-weight: bold; /* Более жирный текст */
+      padding: 12px 24px;
       cursor: pointer;
-      transition: none;
-      outline: none;
+      border-radius: 25px;
+      transition: none; /* Отключаем анимации */
     }
 
+    /* Отключаем визуальные изменения при наведении и фокусе */
     button:hover,
     button:active,
     button:focus {
       background: transparent;
       color: white;
+      outline: none;
     }
 
     .card {
@@ -118,6 +94,11 @@
       margin-top: 10px;
     }
 
+    /* Общий фон */
+    .mafia-bg {
+      background: linear-gradient(#0f0f0f, #1a1a1a);
+    }
+
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -129,6 +110,7 @@
     }
 
     .flip-card {
+      background-color: transparent;
       width: 100%;
       height: 140px;
       perspective: 1000px;
@@ -139,8 +121,6 @@
       position: relative;
       width: 100%;
       height: 100%;
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
       transition: transform 0.6s;
       transform-style: preserve-3d;
     }
@@ -165,6 +145,11 @@
       background: #222;
       cursor: pointer;
       padding: 10px;
+    }
+
+    .flip-card-front {
+      font-size: 20px;
+      font-weight: bold;
     }
 
     .flip-card-back {
@@ -199,12 +184,6 @@
   </style>
 </head>
 <body class="mafia-bg">
-
-  <!-- 💥 Сплеш-экран -->
-  <div id="splash">
-    <h2>Загрузка...</h2>
-  </div>
-
   <!-- Шаг 1: Ввод данных -->
   <div id="setup">
     <h2>Игра Мафия</h2>
@@ -241,63 +220,46 @@
     <div id="playerList" class="card-grid"></div>
   </div>
 
-  <!-- Кнопки внизу -->
+  <!-- ЕДИНСТВЕННЫЕ КНОПКИ на всю страницу -->
   <div class="footer-buttons">
     <button onclick="goToMenu()">Главное меню</button>
     <button onclick="restartGame()">В начало игры</button>
   </div>
 
   <script>
-    // Скрытие splash экрана после загрузки
-    window.addEventListener("load", () => {
-      const splash = document.getElementById("splash");
-      splash.style.opacity = "0";
-      setTimeout(() => {
-        splash.style.display = "none";
-      }, 500); // Скрываем через 0.5 секунд
-    });
+    let players = [];
+    let currentCharacterIndex = 0;
 
-    function startMafia() {
-      // Можно снова показать сплеш-экран при переходе между этапами
-      const splash = document.getElementById("splash");
-      splash.style.display = "flex";
-      splash.style.opacity = "1";
+    async function startMafia() {
+      const response = await fetch('data/roles.json');
+      const roleTemplates = await response.json();
 
-      // Ваша логика
-      const response = fetch('data/roles.json').then(res => res.json()).then(roleTemplates => {
-        const total = parseInt(document.getElementById("totalPlayers").value);
-        const mafiaCount = parseInt(document.getElementById("mafiaCount").value);
-        const sheriffCount = parseInt(document.getElementById("sheriffCount").value);
-        const doctorCount = parseInt(document.getElementById("doctorCount").value);
-        const maniacCount = parseInt(document.getElementById("maniacCount").value);
+      const total = parseInt(document.getElementById("totalPlayers").value);
+      const mafiaCount = parseInt(document.getElementById("mafiaCount").value);
+      const sheriffCount = parseInt(document.getElementById("sheriffCount").value);
+      const doctorCount = parseInt(document.getElementById("doctorCount").value);
+      const maniacCount = parseInt(document.getElementById("maniacCount").value);
 
-        let roles = [];
+      // Распределение ролей
+      let roles = [];
 
-        for (let i = 0; i < mafiaCount; i++) roles.push("мафия");
-        for (let i = 0; i < sheriffCount; i++) roles.push("комиссар");
-        for (let i = 0; i < doctorCount; i++) roles.push("доктор");
-        for (let i = 0; i < maniacCount; i++) roles.push("маньяк");
+      for (let i = 0; i < mafiaCount; i++) roles.push("мафия");
+      for (let i = 0; i < sheriffCount; i++) roles.push("комиссар");
+      for (let i = 0; i < doctorCount; i++) roles.push("доктор");
+      for (let i = 0; i < maniacCount; i++) roles.push("маньяк");
 
-        while (roles.length < total) {
-          roles.push("мирный житель");
-        }
+      while (roles.length < total) {
+        roles.push("мирный житель");
+      }
 
-        roles.sort(() => Math.random() - 0.5);
-        players = roles.map(role => ({role, revealed: false}));
-        localStorage.setItem("mafiaPlayers", JSON.stringify(players));
+      // Перемешиваем
+      roles.sort(() => Math.random() - 0.5);
+      players = roles.map(role => ({role, revealed: false}));
+      localStorage.setItem("mafiaPlayers", JSON.stringify(players));
 
-        // Скрываем splash после подготовки данных
-        setTimeout(() => {
-          splash.style.opacity = "0";
-          setTimeout(() => {
-            splash.style.display = "none";
-          }, 500);
-        }, 1000);
-
-        document.getElementById("setup").style.display = "none";
-        document.getElementById("playerNumber").innerText = `Игрок №1`;
-        document.getElementById("playerCardContainer").style.display = "block";
-      });
+      document.getElementById("setup").style.display = "none";
+      document.getElementById("playerNumber").innerText = `Игрок №1`;
+      document.getElementById("playerCardContainer").style.display = "block";
     }
 
     function showCurrentPlayerRole() {
@@ -357,32 +319,11 @@
     }
 
     function goToMenu() {
-      const splash = document.getElementById("splash");
-      splash.style.display = "flex";
-      splash.style.opacity = "1";
-
-      setTimeout(() => {
-        splash.style.opacity = "0";
-        setTimeout(() => {
-          splash.style.display = "none";
-        }, 500);
-      }, 1000);
-
       window.location.href = "index.html";
     }
 
     function restartGame() {
-      const splash = document.getElementById("splash");
-      splash.style.display = "flex";
-      splash.style.opacity = "1";
-
-      setTimeout(() => {
-        splash.style.opacity = "0";
-        setTimeout(() => {
-          splash.style.display = "none";
-          location.reload();
-        }, 500);
-      }, 500);
+      location.reload();
     }
   </script>
 </body>
