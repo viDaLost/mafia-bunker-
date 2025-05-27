@@ -4,8 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Главная</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+
+  <!-- Шрифт Orbitron -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron :wght@500&display=swap" rel="stylesheet">
+
+  <!-- Манифест для PWA -->
   <link rel="manifest" href="./manifest.json">
+
+  <!-- Иконка сайта -->
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <meta name="theme-color" content="#0f0f0f">
+
+  <!-- Стили -->
   <style>
     body {
       margin: 0;
@@ -82,11 +92,14 @@
     <a href="bunker.html" class="game-icon bunker-icon" title="Бункер"></a>
   </div>
 
+  <!-- Регистрация Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./service-worker.js')
-        .then(reg => console.log('Service Worker зарегистрирован'))
-        .catch(err => console.error('Ошибка регистрации Service Worker:', err));
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(() => console.log('Service Worker зарегистрирован'))
+          .catch(err => console.error('Ошибка регистрации Service Worker:', err));
+      });
     }
   </script>
 
