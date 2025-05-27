@@ -80,7 +80,7 @@
       text-align: left;
       max-width: 400px;
       margin: 0 auto 20px auto;
-      background-color: #ccc; /* Светло-серый фон */
+      background-color: #ccc;
       color: black;
       padding: 15px;
       border-radius: 12px;
@@ -150,6 +150,7 @@
       font-size: 14px;
     }
 
+    /* Всплывающее окно */
     .overlay {
       position: fixed;
       top: 0;
@@ -176,16 +177,13 @@
       z-index: 1001;
     }
 
-    .overlay-content .label {
-      font-size: 16px;
-    }
-
     .overlay-content button {
       margin-top: 15px;
       font-size: 20px;
       font-weight: bold;
     }
 
+    /* Кнопки внизу */
     .footer-buttons {
       position: relative;
       margin-top: 40px;
@@ -211,6 +209,10 @@
   </style>
 </head>
 <body class="bunker-bg">
+
+  <!-- Аудио -->
+  <audio id="backgroundMusic" src="audio/bunker-sound.mp3" preload="auto"></audio>
+
   <!-- Шаг 1: Выбор количества игроков -->
   <div id="setup">
     <h2>Игра Бункер</h2>
@@ -219,7 +221,7 @@
     <button onclick="startBunker()">Начать игру</button>
   </div>
 
-  <!-- Шаг 2: Катастрофа и описание бункера -->
+  <!-- Шаг 2: Катастрофа и условия бункера -->
   <div id="disasterInfo" style="display: none;">
     <h2>Катастрофа произошла!</h2>
     <div class="disaster-info" id="disasterText"></div>
@@ -242,13 +244,13 @@
     <div id="playerList" class="card-grid"></div>
   </div>
 
-  <!-- Кнопки внизу -->
+  <!-- ЕДИНСТВЕННЫЕ кнопки -->
   <div class="footer-buttons">
     <button onclick="goToMenu()">Главное меню</button>
     <button onclick="restartGame()">В начало игры</button>
   </div>
 
-  <!-- Модальное окно -->
+  <!-- Всплывающее окно для просмотра персонажей -->
   <div class="overlay" id="overlay">
     <div class="overlay-content" id="overlayContent"></div>
   </div>
@@ -270,11 +272,13 @@
 
       const total = parseInt(document.getElementById("playerCount").value);
 
+      // Генерируем персонажей
       characters = Array.from({length: total}, () => generateUniqueCharacter(fields));
       localStorage.setItem("bunkerCharacters", JSON.stringify(characters));
 
       document.getElementById("setup").style.display = "none";
 
+      // Рассчитываем параметры игры
       const playersToStay = Math.ceil(total * 0.2);
       const playersToRemove = total - playersToStay;
       const removalPlan = calculateRemoval(playersToRemove, 6);
@@ -290,22 +294,45 @@
       ]);
       const randomSupplies = getRandomMultiple(supplies, 2, 4).join(', ');
 
+      // Список способов попадания в бункер
+      const playerEntryDescriptions = [
+        "был спасён правительством",
+        "найден в заброшенном городе",
+        "сбежал из военного лагеря",
+        "выжил в зоне поражения",
+        "был частью экспедиции"
+      ];
+
+      const entriesHTML = playerEntryDescriptions.slice(0, total).map((desc, i) =>
+        `<p>Игрок ${i + 1}: ${desc}</p>`
+      ).join('');
+
       document.getElementById("disasterText").innerHTML = `<strong>Катастрофа:</strong> ${disaster.type} — ${disaster.description}`;
       document.getElementById("bunkerText").innerHTML = `
         <strong>Условия бункера:</strong><br/>
         ${area}<br/>
         Продолжительность: ${setting.duration}<br/>
         Припасы: ${randomSupplies}<br/><br/>
-        <strong>Раунды:</strong><br/>
-        Игроков всего: ${total}<br/>
-        Остаться должны: ${playersToStay}<br/>
-        Исключено за игру: ${playersToRemove}<br/>
-        Исключения по раундам: ${removalPlan.join(', ')}
+        <strong>Как игроки попали в бункер:</strong><br/>
+        ${entriesHTML}
       `;
       document.getElementById("disasterInfo").style.display = "block";
+
+      // Начинаем проигрывать музыку
+      const audio = document.getElementById("backgroundMusic");
+      try {
+        await audio.play();
+      } catch (err) {
+        console.log("Музыка не проигрывается (ожидание взаимодействия пользователя)");
+      }
     }
 
     function showPlayerCard() {
+      // Останавливаем музыку
+      const audio = document.getElementById("backgroundMusic");
+      audio.pause();
+      audio.currentTime = 0;
+
       document.getElementById("disasterInfo").style.display = "none";
       document.getElementById("playerNumber").innerText = `Игрок №1`;
       document.getElementById("playerCardContainer").style.display = "block";
@@ -381,24 +408,22 @@
       const overlay = document.getElementById("overlay");
       const overlayContent = document.getElementById("overlayContent");
 
-      overlayContent.innerHTML = `
-        <h3>Персонаж игрока ${index + 1}</h3>
-        <span class="label">Профессия:</span> ${capitalizeFirstLetter(char.profession)}<br/>
-        <span class="label">Здоровье:</span> ${capitalizeFirstLetter(char.health)}<br/>
-        <span class="label">Фобия:</span> ${capitalizeFirstLetter(char.phobia)}<br/>
-        <span class="label">Хобби / Навыки:</span> ${capitalizeFirstLetter(char.skill)}<br/>
-        <span class="label">Инвентарь:</span> ${capitalizeFirstLetter(char.inventory)}<br/>
-        <span class="label">Качество:</span> ${capitalizeFirstLetter(char.quality)}<br/>
-        <span class="label">Биография:</span> ${capitalizeFirstLetter(char.biography)}<br/>
-        <span class="label">Секрет:</span> ${capitalizeFirstLetter(char.secret)}<br/><br/>
-        <button onclick="closeOverlay()">Закрыть карточку</button>
-      `;
+      overlayContent.innerHTML = `<h3>Персонаж игрока ${index + 1}</h3>`;
+      overlayContent.innerHTML += `<span class="label">Профессия:</span> ${capitalizeFirstLetter(char.profession)}<br/>`;
+      overlayContent.innerHTML += `<span class="label">Здоровье:</span> ${capitalizeFirstLetter(char.health)}<br/>`;
+      overlayContent.innerHTML += `<span class="label">Фобия:</span> ${capitalizeFirstLetter(char.phobia)}<br/>`;
+      overlayContent.innerHTML += `<span class="label">Хобби / Навыки:</span> ${capitalizeFirstLetter(char.skill)}<br/>`;
+      overlayContent.innerHTML += `<span class="label">Инвентарь:</span> ${capitalizeFirstLetter(char.inventory)}<br/>`;
+      overlayContent.innerHTML += `<span class="label">Качество:</span> ${capitalizeFirstLetter(char.quality)}<br/>`;
+      overlayContent.innerHTML += `<span class="label">Биография:</span> ${capitalizeFirstLetter(char.biography)}<br/>`;
+      overlayContent.innerHTML += `<span class="label">Секрет:</span> ${capitalizeFirstLetter(char.secret)}<br/><br/>`;
+      overlayContent.innerHTML += `<button onclick="closeOverlay(this)">Закрыть карточку</button>`;
 
       overlay.classList.add("active");
     }
 
-    function closeOverlay() {
-      document.getElementById("overlay").classList.remove("active");
+    function closeOverlay(el) {
+      document.querySelector(".overlay").classList.remove("active");
     }
 
     function goToMenu() {
@@ -454,7 +479,7 @@
       const plan = new Array(rounds).fill(0);
       let remaining = totalRemove;
       for (let i = 0; i < rounds && remaining > 0; i++) {
-        const share = Math.ceil(remaining / (rounds - i));
+        const share = Math.ceil(remaining / (rounds - i + 1));
         plan[i] = share;
         remaining -= share;
       }
