@@ -15,7 +15,32 @@ body.bunker-bg {
   background-attachment: fixed;
 }
 
-/* === Ввод чисел === */
+/* === Сплеш-экран при загрузке === */
+#splash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #0f0f0f; /* Чёрный фон как fallback */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease;
+  opacity: 1;
+  pointer-events: none;
+}
+
+#splash h2 {
+  color: white;
+  font-size: 24px;
+  text-shadow: 0 0 10px black;
+}
+
+/* Для каждой страницы свой фон сплеш-экрана через JS */
+
+/* === Ввод данных === */
 input[type="number"] {
   font-size: 18px;
   padding: 10px 20px;
@@ -95,7 +120,7 @@ button:focus {
   margin-top: 10px;
 }
 
-/* === Сетка карточек === */
+/* === Сетка карточек игроков === */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -106,7 +131,7 @@ button:focus {
   margin-right: auto;
 }
 
-/* === Flip карточки игроков === */
+/* === Flip-карточки === */
 .flip-card {
   width: 100%;
   height: 140px;
@@ -155,7 +180,40 @@ button:focus {
   font-size: 14px;
 }
 
-/* === Кнопки внизу === */
+/* === Всплывающее окно === */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.overlay.active {
+  display: flex;
+}
+
+.overlay-content {
+  background: #1e1e1e;
+  padding: 25px;
+  border-radius: 12px;
+  max-width: 400px;
+  text-align: left;
+  z-index: 1001;
+}
+
+.overlay-content button {
+  margin-top: 15px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* === Кнопки внизу страницы === */
 .footer-buttons {
   position: relative;
   margin-top: 40px;
