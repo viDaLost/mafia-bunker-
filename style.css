@@ -1,5 +1,6 @@
+/* === Фон для страниц === */
 body.mafia-bg {
-  background-image: url('images/mafia-background.jpg'); /* Путь к вашему изображению */
+  background-image: url('images/mafia-background.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -7,13 +8,14 @@ body.mafia-bg {
 }
 
 body.bunker-bg {
-  background-image: url('images/bunker-background.jpg'); /* Путь к вашему изображению */
+  background-image: url('images/bunker-background.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
 
+/* === Ввод чисел === */
 input[type="number"] {
   font-size: 18px;
   padding: 10px 20px;
@@ -29,24 +31,30 @@ input[type="number"] {
   text-align: center;
 }
 
+/* === Кнопки === */
 button {
   display: block;
   margin: 15px auto;
-  background: #ff0033;
+  background: transparent;
   border: none;
   color: white;
   font-size: 18px;
   padding: 12px 24px;
   cursor: pointer;
   border-radius: 25px;
-  transition: all 0.3s ease;
-  -webkit-tap-highlight-color: rgba(0,0,0,0); /* Отключение подсветки на мобильных */
+  transition: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-button:hover {
-  background: #e60029;
+button:hover,
+button:active,
+button:focus {
+  background: transparent;
+  color: white;
+  outline: none;
 }
 
+/* === Карточки === */
 .card {
   background: #1e1e1e;
   border: 1px solid #444;
@@ -87,6 +95,7 @@ button:hover {
   margin-top: 10px;
 }
 
+/* === Сетка карточек === */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -97,6 +106,7 @@ button:hover {
   margin-right: auto;
 }
 
+/* === Flip карточки игроков === */
 .flip-card {
   width: 100%;
   height: 140px;
@@ -133,6 +143,11 @@ button:hover {
   padding: 10px;
 }
 
+.flip-card-front {
+  font-weight: bold;
+  font-size: 20px;
+}
+
 .flip-card-back {
   transform: rotateY(180deg);
   text-align: center;
@@ -140,6 +155,7 @@ button:hover {
   font-size: 14px;
 }
 
+/* === Кнопки внизу === */
 .footer-buttons {
   position: relative;
   margin-top: 40px;
@@ -154,6 +170,19 @@ button:hover {
 .footer-buttons button {
   width: 45%;
   font-size: 16px;
+  background: #ff0033;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 24px;
+  transition: none;
+}
+
+.footer-buttons button:hover,
+.footer-buttons button:active,
+.footer-buttons button:focus {
+  background: #ff0033;
+  color: white;
 }
 
 @media (max-width: 480px) {
