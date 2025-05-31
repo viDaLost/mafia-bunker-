@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
@@ -7,9 +8,8 @@
   <!-- Подключение шрифта Orbitron -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
 
-  <!-- Стили -->
   <style>
-    /* ПРЕЛОАДЕР */
+    /* Прелоадер */
     #preloader {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -40,7 +40,8 @@
       margin: 0;
       padding: 0;
       font-family: 'Orbitron', sans-serif;
-      background: linear-gradient(#0f0f0f, #1a1a1a);
+      background: #000 url('mafia.png') no-repeat center center fixed;
+      background-size: cover;
       color: white;
       text-align: center;
       padding: 40px;
@@ -59,7 +60,7 @@
       display: block;
       width: 80%;
       max-width: 300px;
-      background-color: #222;
+      background-color: rgba(34, 34, 34, 0.9);
       color: white;
       text-align: center;
     }
@@ -72,10 +73,9 @@
       color: white;
       font-size: 21px;
       font-weight: bold;
-      padding: 12px 24px;
       cursor: pointer;
-      border-radius: 25px;
       transition: none;
+      outline: none;
     }
 
     button:hover,
@@ -83,7 +83,6 @@
     button:focus {
       background: transparent;
       color: white;
-      outline: none;
     }
 
     .card {
@@ -122,10 +121,6 @@
       font-size: 18px;
       color: #ffffff;
       margin-top: 10px;
-    }
-
-    .mafia-bg {
-      background: linear-gradient(#0f0f0f, #1a1a1a);
     }
 
     .card-grid {
