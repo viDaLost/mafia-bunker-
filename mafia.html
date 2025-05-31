@@ -1,12 +1,41 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Мафия</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron       :wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+
+  <!-- Подключение шрифта Orbitron -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+
+  <!-- Стили -->
   <style>
+    /* ПРЕЛОАДЕР */
+    #preloader {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #000;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      z-index: 9999;
+      animation: fadeOut 1s ease forwards 2s;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    body.loaded {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.5s ease-in-out;
+    }
+
     body {
       margin: 0;
       padding: 0;
@@ -15,7 +44,9 @@
       color: white;
       text-align: center;
       padding: 40px;
-      font-size: 18px; /* Общий размер текста */
+      font-size: 18px;
+      opacity: 0;
+      visibility: hidden;
     }
 
     input[type="number"] {
@@ -37,17 +68,16 @@
       display: block;
       margin: 15px auto;
       background: transparent;
-      border: none; /* Обводка полностью убрана */
+      border: none;
       color: white;
-      font-size: 21px; /* Увеличенный размер текста на кнопках */
-      font-weight: bold; /* Более жирный текст */
+      font-size: 21px;
+      font-weight: bold;
       padding: 12px 24px;
       cursor: pointer;
       border-radius: 25px;
-      transition: none; /* Отключаем анимации */
+      transition: none;
     }
 
-    /* Отключаем визуальные изменения при наведении и фокусе */
     button:hover,
     button:active,
     button:focus {
@@ -94,7 +124,6 @@
       margin-top: 10px;
     }
 
-    /* Общий фон */
     .mafia-bg {
       background: linear-gradient(#0f0f0f, #1a1a1a);
     }
@@ -181,11 +210,24 @@
         width: 100%;
       }
     }
+
+    /* Анимации */
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body class="mafia-bg">
+  <!-- Прелоадер -->
+  <div id="preloader">Загрузка...</div>
+
   <!-- Шаг 1: Ввод данных -->
-  <div id="setup">
+  <div id="setup" class="fade-in">
     <h2>Игра Мафия</h2>
     <label>Общее количество игроков:</label>
     <input type="number" id="totalPlayers" min="5" max="30" value="10" />
@@ -325,6 +367,15 @@
     function restartGame() {
       location.reload();
     }
+
+    // Удаление прелоадера после загрузки
+    window.addEventListener("load", () => {
+      document.querySelector("#preloader").classList.add("fadeOut");
+      setTimeout(() => {
+        document.querySelector("#preloader").remove();
+      }, 1000);
+      document.body.classList.add("loaded");
+    });
   </script>
 </body>
 </html>
