@@ -18,13 +18,11 @@
       opacity: 0;
       visibility: hidden;
     }
-
     body.loaded {
       opacity: 1;
       visibility: visible;
       transition: opacity 0.5s ease-in-out;
     }
-
     #preloader {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -37,68 +35,12 @@
       z-index: 9999;
       animation: fadeOut 1s ease forwards 2s;
     }
-
     @keyframes fadeOut {
       to {
         opacity: 0;
         visibility: hidden;
       }
     }
-
-    input[type="number"] {
-      font-size: 18px;
-      padding: 10px 20px;
-      border-radius: 25px;
-      border: none;
-      outline: none;
-      margin: 10px auto;
-      display: block;
-      width: 80%;
-      max-width: 300px;
-      background-color: rgba(34, 34, 34, 0.9);
-      color: white;
-      text-align: center;
-    }
-
-    button {
-      display: block;
-      margin: 15px auto;
-      background: transparent;
-      border: 1px solid white;
-      color: white;
-      font-size: 21px;
-      font-weight: bold;
-      cursor: pointer;
-      padding: 10px 20px;
-      border-radius: 8px;
-    }
-
-    .card {
-      background: rgba(30, 30, 30, 0.9);
-      border: 1px solid #444;
-      padding: 20px;
-      border-radius: 12px;
-      margin-top: 20px;
-      text-align: left;
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
-      font-size: 16px;
-    }
-
-    .disaster-info,
-    .bunker-info {
-      font-size: 17px;
-      line-height: 1.6;
-      text-align: left;
-      max-width: 400px;
-      margin: 0 auto 20px auto;
-      background-color: rgba(204, 204, 204, 0.9);
-      color: black;
-      padding: 15px;
-      border-radius: 12px;
-    }
-
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -108,14 +50,12 @@
       margin-left: auto;
       margin-right: auto;
     }
-
     .flip-card {
       width: 100%;
       height: 140px;
       perspective: 1000px;
       cursor: pointer;
     }
-
     .flip-card-inner {
       position: relative;
       width: 100%;
@@ -123,11 +63,9 @@
       transition: transform 0.6s;
       transform-style: preserve-3d;
     }
-
     .flip-card.flipped .flip-card-inner {
       transform: rotateY(180deg);
     }
-
     .flip-card-front,
     .flip-card-back {
       position: absolute;
@@ -140,34 +78,16 @@
       justify-content: center;
       border-radius: 12px;
     }
-
     .flip-card-front {
       background-color: rgba(20, 20, 20, 0.9);
       color: white;
       font-size: 24px;
       font-weight: bold;
     }
-
     .flip-card-back {
       transform: rotateY(180deg);
       background-color: rgba(30, 30, 30, 0.95);
     }
-
-    .footer-buttons {
-      margin-top: 40px;
-      padding-bottom: 40px;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .footer-buttons button {
-      width: 45%;
-      font-size: 21px;
-      font-weight: bold;
-    }
-
     .overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -177,11 +97,9 @@
       justify-content: center;
       z-index: 1000;
     }
-
     .overlay.active {
       display: flex;
     }
-
     .overlay-content {
       background: #1e1e1e;
       padding: 25px;
@@ -194,21 +112,19 @@
       opacity: 0;
       color: white;
     }
-
+    .overlay-content img.icon {
+      vertical-align: middle;
+      margin-right: 8px;
+      width: 24px;
+      height: 24px;
+    }
     @keyframes expandFromCard {
       from { transform: scale(0.7); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
-
     @keyframes collapseToCard {
       from { transform: scale(1); opacity: 1; }
       to { transform: scale(0.7); opacity: 0; }
-    }
-
-    @media (max-width: 480px) {
-      .footer-buttons button {
-        width: 100%;
-      }
     }
   </style>
 </head>
@@ -220,37 +136,12 @@
     <input type="number" id="playerCount" min="2" max="30" value="5" />
     <button onclick="startBunker()">Начать игру</button>
   </div>
-    <div id="disasterInfo" style="display: none;">
-    <h2>Катастрофа произошла!</h2>
-    <div class="disaster-info" id="disasterText"></div>
-    <div class="bunker-info" id="bunkerText"></div>
-    <button onclick="showPlayerCard()">Показать карточку игрока</button>
-  </div>
-
-  <div id="playerCardContainer" style="display: none;">
-    <h2 id="playerNumber">Игрок №1</h2>
-    <button onclick="showCurrentPlayerCard()">Показать карточку</button>
-  </div>
-
-  <div id="characterCard" class="card" style="display: none;"></div>
-
-  <div id="allCardsShown" style="display: none;">
-    <h2>Все карточки показаны</h2>
-    <div id="playerList" class="card-grid"></div>
-  </div>
-
-  <div class="footer-buttons">
-    <button onclick="goToMenu()">Главное меню</button>
-    <button onclick="restartGame()">В начало игры</button>
-  </div>
-
-  <div class="overlay" id="overlay">
+    <div class="overlay" id="overlay">
     <div class="overlay-content" id="overlayContent"></div>
   </div>
 
   <script>
     let characters = [];
-    let currentCharacterIndex = 0;
 
     const usedValues = {
       profession: [], health: [], phobia: [], skill: [],
@@ -261,72 +152,34 @@
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    function showPlayerCard() {
-      document.getElementById("disasterInfo").style.display = "none";
-      document.getElementById("playerNumber").innerText = `Игрок №1`;
-      document.getElementById("playerCardContainer").style.display = "block";
-    }
-
-    function showCurrentPlayerCard() {
-      const chars = JSON.parse(localStorage.getItem("bunkerCharacters"));
-      if (currentCharacterIndex >= chars.length) return;
-      const char = chars[currentCharacterIndex];
-      let html = `<h3>Карточка игрока ${currentCharacterIndex + 1}</h3>`;
-      for (const [label, key] of Object.entries({
-        "Профессия": "profession", "Здоровье": "health", "Фобия": "phobia",
-        "Навык": "skill", "Инвентарь": "inventory", "Качество": "quality",
-        "Биография": "biography", "Секрет": "secret"
-      })) {
-        html += `<p><strong>${label}:</strong> ${capitalizeFirstLetter(char[key])}</p><br/>`;
-      }
-      html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
-      document.getElementById("characterCard").innerHTML = html;
-      document.getElementById("characterCard").style.display = "block";
-      document.getElementById("playerCardContainer").style.display = "none";
-    }
-
-    function nextPlayer() {
-      currentCharacterIndex++;
-      if (currentCharacterIndex < characters.length) {
-        document.getElementById("playerNumber").innerText = `Игрок №${currentCharacterIndex + 1}`;
-        document.getElementById("playerCardContainer").style.display = "block";
-        document.getElementById("characterCard").style.display = "none";
-      } else showAllPlayers();
-    }
-
-    function showAllPlayers() {
-      document.getElementById("characterCard").style.display = "none";
-      document.getElementById("playerCardContainer").style.display = "none";
-      document.getElementById("allCardsShown").style.display = "block";
-      const listDiv = document.getElementById("playerList");
-      listDiv.innerHTML = "";
-      characters.forEach((char, i) => {
-        const card = document.createElement("div");
-        card.className = "flip-card";
-        card.addEventListener("click", () => showPlayerOverlay(card, i));
-        card.innerHTML = `
-          <div class="flip-card-inner">
-            <div class="flip-card-front">Игрок ${i + 1}</div>
-            <div class="flip-card-back"></div>
-          </div>`;
-        listDiv.appendChild(card);
-      });
-    }
-
-    function showPlayerOverlay(cardElement, index) {
-      cardElement.classList.add("flipped");
+    function showPlayerOverlay(card, index) {
+      card.classList.add("flipped");
       setTimeout(() => {
         const char = characters[index];
         const overlay = document.getElementById("overlay");
         const content = document.getElementById("overlayContent");
+
+        const traits = [
+          ["Профессия", "profession", "profession.png"],
+          ["Здоровье", "health", "health.png"],
+          ["Фобия", "phobia", "phobia.png"],
+          ["Навык", "skill", "skill.png"],
+          ["Инвентарь", "inventory", "inventory.png"],
+          ["Качество", "quality", "quality.png"],
+          ["Биография", "biography", "biography.png"],
+          ["Секрет", "secret", "secret.png"]
+        ];
+
         content.innerHTML = `<h3>Игрок №${index + 1}</h3>`;
-        for (const [label, key] of Object.entries({
-          "Профессия": "profession", "Здоровье": "health", "Фобия": "phobia",
-          "Навык": "skill", "Инвентарь": "inventory", "Качество": "quality",
-          "Биография": "biography", "Секрет": "secret"
-        })) {
-          content.innerHTML += `<p><strong>${label}:</strong> ${capitalizeFirstLetter(char[key])}</p><br/>`;
+        for (const [label, key, icon] of traits) {
+          content.innerHTML += `
+            <p>
+              <img src="icons/${icon}" class="icon" alt="${label}">
+              <strong>${label}:</strong> ${capitalizeFirstLetter(char[key])}
+            </p><br/>
+          `;
         }
+
         content.innerHTML += `<button onclick="closePlayerOverlay(${index})">Закрыть</button>`;
         overlay.classList.add("active");
       }, 400);
@@ -343,57 +196,28 @@
       }, 300);
     }
 
-    function goToMenu() {
-      window.location.href = "index.html";
-    }
-
-    function restartGame() {
-      location.reload();
-    }
-
-    async function startBunker() {
-      const [disasters, settings, fields, supplies] = await Promise.all([
-        fetch("data/disasters.json").then(r => r.json()),
-        fetch("data/bunker-settings.json").then(r => r.json()),
-        fetch("data/fields.json").then(r => r.json()),
-        fetch("data/supplies.json").then(r => r.json())
-      ]);
-      const total = parseInt(document.getElementById("playerCount").value);
-      characters = Array.from({length: total}, () => generateUniqueCharacter(fields));
-      localStorage.setItem("bunkerCharacters", JSON.stringify(characters));
+    function showAllPlayers() {
       document.getElementById("setup").style.display = "none";
-      const disaster = getRandom(disasters);
-      const setting = getRandom(settings);
-      const area = getRandom([
-        "Площадь бункера — 50 м², одноэтажный",
-        "Площадь бункера — 80 м², одноэтажный",
-        "Площадь бункера — 120 м², двухэтажный",
-        "Площадь бункера — 160 м², одноэтажный",
-        "Площадь бункера — 200 м², двухэтажный"
-      ]);
-      const randomSupplies = getRandomMultiple(supplies, 2, 4).join(', ');
-      const playersToStay = Math.ceil(total * 0.2);
-      const playersToRemove = total - playersToStay;
-      const removalPlan = calculateRemoval(playersToRemove, 6);
-      document.getElementById("disasterText").innerHTML = `<strong>Катастрофа:</strong> ${disaster.type} — ${disaster.description}`;
-      document.getElementById("bunkerText").innerHTML = `
-        <strong>Условия бункера:</strong><br/>
-        ${area}<br/>
-        Продолжительность: ${setting.duration}<br/>
-        Припасы: ${randomSupplies}<br/><br/>
-        <strong>Раунды:</strong><br/>
-        Игроков всего: ${total}<br/>
-        Остаться должны: ${playersToStay}<br/>
-        Исключено за игру: ${playersToRemove}<br/>
-        Исключения по раундам: ${removalPlan.join(', ')}
-      `;
-      document.getElementById("disasterInfo").style.display = "block";
+      const grid = document.getElementById("playerList");
+      grid.innerHTML = "";
+      characters.forEach((char, i) => {
+        const card = document.createElement("div");
+        card.className = "flip-card";
+        card.innerHTML = `
+          <div class="flip-card-inner">
+            <div class="flip-card-front">Игрок ${i + 1}</div>
+            <div class="flip-card-back"></div>
+          </div>`;
+        card.addEventListener("click", () => showPlayerOverlay(card, i));
+        grid.appendChild(card);
+      });
+      document.getElementById("allCardsShown").style.display = "block";
     }
 
     function generateUniqueCharacter(fields) {
       function pick(fieldName, options) {
         const available = options.filter(opt => !usedValues[fieldName].includes(opt));
-        const value = available.length > 0 ? getRandom(available) : getRandom(options);
+        const value = available.length ? getRandom(available) : getRandom(options);
         usedValues[fieldName].push(value);
         return value;
       }
@@ -413,36 +237,15 @@
       return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    function getRandomMultiple(arr, min, max) {
-      const count = Math.floor(Math.random() * (max - min + 1)) + min;
-      const result = [];
-      const used = new Set();
-      while (result.length < count && used.size < arr.length) {
-        const item = getRandom(arr);
-        if (!used.has(item)) {
-          result.push(item);
-          used.add(item);
-        }
-      }
-      return result;
-    }
-
-    function calculateRemoval(totalRemove, rounds) {
-      const plan = new Array(rounds).fill(0);
-      let remaining = totalRemove;
-      for (let i = 0; i < rounds && remaining > 0; i++) {
-        const share = Math.ceil(remaining / (rounds - i));
-        plan[i] = share;
-        remaining -= share;
-      }
-      return plan;
+    async function startBunker() {
+      const fields = await fetch("data/fields.json").then(r => r.json());
+      const count = +document.getElementById("playerCount").value;
+      characters = Array.from({length: count}, () => generateUniqueCharacter(fields));
+      showAllPlayers();
     }
 
     window.addEventListener("load", () => {
-      document.querySelector("#preloader").classList.add("fadeOut");
-      setTimeout(() => {
-        document.querySelector("#preloader").remove();
-      }, 1000);
+      document.querySelector("#preloader").remove();
       document.body.classList.add("loaded");
     });
   </script>
