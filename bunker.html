@@ -4,12 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Бункер</title>
-
-  <!-- Подключение шрифта Orbitron -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
-
+  <!-- Подключение шрифта печатной машинки -->
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
   <style>
-    /* Прелоадер */
+    body {
+      font-family: 'Special Elite', monospace;
+      background: #000 url('images/bunker-background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      text-align: center;
+      padding: 40px;
+      font-size: 18px;
+      margin: 0;
+      opacity: 0;
+      visibility: hidden;
+    }
+    body.loaded {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.5s ease-in-out;
+    }
     #preloader {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -22,34 +36,12 @@
       z-index: 9999;
       animation: fadeOut 1s ease forwards 2s;
     }
-
     @keyframes fadeOut {
       to {
         opacity: 0;
         visibility: hidden;
       }
     }
-
-    body.loaded {
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 0.5s ease-in-out;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Orbitron', sans-serif;
-      background: #000 url('images/bunker-background.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: white;
-      text-align: center;
-      padding: 40px;
-      font-size: 18px;
-      opacity: 0;
-      visibility: hidden;
-    }
-
     input[type="number"] {
       font-size: 18px;
       padding: 10px 20px;
@@ -64,27 +56,25 @@
       color: white;
       text-align: center;
     }
-
     button {
       display: block;
       margin: 15px auto;
       background: transparent;
-      border: none;
+      border: 1px solid white;
       color: white;
       font-size: 21px;
       font-weight: bold;
       cursor: pointer;
-      transition: none;
-      outline: none;
+      padding: 10px 20px;
+      border-radius: 8px;
     }
-
-    button:hover,
-    button:active,
-    button:focus {
-      background: transparent;
-      color: white;
+    .label {
+      font-weight: bold;
+      font-size: 18px;
+      color: #ffffff;
+      display: block;
+      margin-top: 10px;
     }
-
     .card {
       background: rgba(30, 30, 30, 0.9);
       border: 1px solid #444;
@@ -97,15 +87,6 @@
       margin-right: auto;
       font-size: 16px;
     }
-
-    .label {
-      font-weight: bold;
-      font-size: 18px;
-      color: #ffffff;
-      display: block;
-      margin-top: 10px;
-    }
-
     .disaster-info,
     .bunker-info {
       font-size: 17px;
@@ -118,15 +99,6 @@
       padding: 15px;
       border-radius: 12px;
     }
-
-    .disaster-info strong,
-    .bunker-info strong {
-      display: block;
-      font-size: 18px;
-      color: black;
-      margin-top: 10px;
-    }
-
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -136,14 +108,12 @@
       margin-left: auto;
       margin-right: auto;
     }
-
     .flip-card {
       width: 100%;
       height: 140px;
       perspective: 1000px;
       cursor: pointer;
     }
-
     .flip-card-inner {
       position: relative;
       width: 100%;
@@ -151,11 +121,9 @@
       transition: transform 0.6s;
       transform-style: preserve-3d;
     }
-
     .flip-card.flipped .flip-card-inner {
       transform: rotateY(180deg);
     }
-
     .flip-card-front,
     .flip-card-back {
       position: absolute;
@@ -169,12 +137,10 @@
       border-radius: 12px;
       background: rgba(34, 34, 34, 0.9);
     }
-
     .flip-card-front {
       font-size: 20px;
       font-weight: bold;
     }
-
     .flip-card-back {
       transform: rotateY(180deg);
       text-align: left;
@@ -182,90 +148,35 @@
       overflow-y: auto;
       font-size: 14px;
     }
-
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.95);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .overlay.active {
-      display: flex;
-    }
-
-    .overlay-content {
-      background: #1e1e1e;
-      padding: 25px;
-      border-radius: 12px;
-      max-width: 400px;
-      text-align: left;
-      z-index: 1001;
-    }
-
-    .overlay-content .label {
-      font-size: 16px;
-    }
-
-    .overlay-content button {
-      margin-top: 15px;
-      font-size: 20px;
-      font-weight: bold;
-    }
-
     .footer-buttons {
-      position: relative;
       margin-top: 40px;
       padding-bottom: 40px;
-      z-index: 10;
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
       gap: 15px;
     }
-
     .footer-buttons button {
       width: 45%;
       font-size: 21px;
       font-weight: bold;
     }
-
     @media (max-width: 480px) {
       .footer-buttons button {
         width: 100%;
       }
     }
-
-    /* Анимации */
-    .fade-in {
-      animation: fadeIn 0.5s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
   </style>
 </head>
-<body class="bunker-bg">
-  <!-- Прелоадер -->
+<body>
   <div id="preloader">Загрузка...</div>
-
-  <!-- Шаг 1: Выбор количества игроков -->
-  <div id="setup" class="fade-in">
+    <div id="setup" class="fade-in">
     <h2>Игра Бункер</h2>
     <p>Введите количество игроков (до 30)</p>
     <input type="number" id="playerCount" min="2" max="30" value="5" />
     <button onclick="startBunker()">Начать игру</button>
   </div>
 
-  <!-- Шаг 2: Катастрофа и описание бункера -->
   <div id="disasterInfo" style="display: none;">
     <h2>Катастрофа произошла!</h2>
     <div class="disaster-info" id="disasterText"></div>
@@ -273,35 +184,41 @@
     <button onclick="showPlayerCard()">Показать карточку игрока</button>
   </div>
 
-  <!-- Шаг 3: Карточка текущего игрока -->
   <div id="playerCardContainer" style="display: none;">
     <h2 id="playerNumber">Игрок №1</h2>
     <button onclick="showCurrentPlayerCard()">Показать карточку</button>
   </div>
 
-  <!-- Шаг 4: Отображение карточки -->
   <div id="characterCard" class="card" style="display: none;"></div>
 
-  <!-- Шаг 5: Все карточки показаны -->
   <div id="allCardsShown" style="display: none;">
     <h2>Все карточки показаны</h2>
     <div id="playerList" class="card-grid"></div>
   </div>
 
-  <!-- Кнопки внизу -->
   <div class="footer-buttons">
     <button onclick="goToMenu()">Главное меню</button>
     <button onclick="restartGame()">В начало игры</button>
   </div>
 
-  <!-- Модальное окно -->
-  <div class="overlay" id="overlay">
+  <div class="overlay" id="overlay" style="display: none;">
     <div class="overlay-content" id="overlayContent"></div>
   </div>
 
   <script>
     let characters = [];
     let currentCharacterIndex = 0;
+
+    const usedValues = {
+      profession: [],
+      health: [],
+      phobia: [],
+      skill: [],
+      inventory: [],
+      quality: [],
+      biography: [],
+      secret: []
+    };
 
     async function startBunker() {
       const disasterRes = await fetch('data/disasters.json');
@@ -315,7 +232,7 @@
       const supplies = await suppliesRes.json();
 
       const total = parseInt(document.getElementById("playerCount").value);
-      characters = Array.from({length: total}, () => generateUniqueCharacter(fields));
+      characters = Array.from({ length: total }, () => generateUniqueCharacter(fields));
       localStorage.setItem("bunkerCharacters", JSON.stringify(characters));
 
       document.getElementById("setup").style.display = "none";
@@ -326,15 +243,13 @@
 
       const disaster = getRandom(disasters);
       const setting = getRandom(settings);
-
       const area = getRandom([
-        "Площадь бункера — 50 квадратных метров, одноэтажный",
-        "Площадь бункера — 80 квадратных метров, одноэтажный",
-        "Площадь бункера — 120 квадратных метров, двухэтажный",
-        "Площадь бункера — 160 квадратных метров, одноэтажный",
-        "Площадь бункера — 200 квадратных метров, двухэтажный"
+        "Площадь бункера — 50 м², одноэтажный",
+        "Площадь бункера — 80 м², одноэтажный",
+        "Площадь бункера — 120 м², двухэтажный",
+        "Площадь бункера — 160 м², одноэтажный",
+        "Площадь бункера — 200 м², двухэтажный"
       ]);
-
       const randomSupplies = getRandomMultiple(supplies, 2, 4).join(', ');
 
       document.getElementById("disasterText").innerHTML = `<strong>Катастрофа:</strong> ${disaster.type} — ${disaster.description}`;
@@ -352,8 +267,7 @@
 
       document.getElementById("disasterInfo").style.display = "block";
     }
-
-    function showPlayerCard() {
+        function showPlayerCard() {
       document.getElementById("disasterInfo").style.display = "none";
       document.getElementById("playerNumber").innerText = `Игрок №1`;
       document.getElementById("playerCardContainer").style.display = "block";
@@ -365,14 +279,14 @@
 
       const char = chars[currentCharacterIndex];
       let html = `<h3>Карточка игрока ${currentCharacterIndex + 1}:</h3>`;
-      html += `<span class="label">Профессия:</span> ${capitalizeFirstLetter(char.profession)}<br/>`;
-      html += `<span class="label">Здоровье:</span> ${capitalizeFirstLetter(char.health)}<br/>`;
-      html += `<span class="label">Фобия:</span> ${capitalizeFirstLetter(char.phobia)}<br/>`;
-      html += `<span class="label">Хобби / Навыки:</span> ${capitalizeFirstLetter(char.skill)}<br/>`;
-      html += `<span class="label">Инвентарь:</span> ${capitalizeFirstLetter(char.inventory)}<br/>`;
-      html += `<span class="label">Личностные качества:</span> ${capitalizeFirstLetter(char.quality)}<br/>`;
-      html += `<span class="label">Биография:</span> ${capitalizeFirstLetter(char.biography)}<br/>`;
-      html += `<span class="label">Секрет:</span> ${capitalizeFirstLetter(char.secret)}<br/><br/>`;
+      html += `<span class="label">Профессия:</span> ${char.profession}<br/>`;
+      html += `<span class="label">Здоровье:</span> ${char.health}<br/>`;
+      html += `<span class="label">Фобия:</span> ${char.phobia}<br/>`;
+      html += `<span class="label">Навык:</span> ${char.skill}<br/>`;
+      html += `<span class="label">Инвентарь:</span> ${char.inventory}<br/>`;
+      html += `<span class="label">Качество:</span> ${char.quality}<br/>`;
+      html += `<span class="label">Биография:</span> ${char.biography}<br/>`;
+      html += `<span class="label">Секрет:</span> ${char.secret}<br/><br/>`;
       html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
 
       document.getElementById("characterCard").innerHTML = html;
@@ -409,14 +323,14 @@
               Игрок<br>${i + 1}
             </div>
             <div class="flip-card-back">
-              Профессия: ${capitalizeFirstLetter(char.profession)}<br/>
-              Здоровье: ${capitalizeFirstLetter(char.health)}<br/>
-              Фобия: ${capitalizeFirstLetter(char.phobia)}<br/>
-              Хобби: ${capitalizeFirstLetter(char.skill)}<br/>
-              Инвентарь: ${capitalizeFirstLetter(char.inventory)}<br/>
-              Личность: ${capitalizeFirstLetter(char.quality)}<br/>
-              Биография: ${capitalizeFirstLetter(char.biography)}<br/>
-              Секрет: ${capitalizeFirstLetter(char.secret)}
+              Профессия: ${char.profession}<br/>
+              Здоровье: ${char.health}<br/>
+              Фобия: ${char.phobia}<br/>
+              Навык: ${char.skill}<br/>
+              Инвентарь: ${char.inventory}<br/>
+              Качество: ${char.quality}<br/>
+              Биография: ${char.biography}<br/>
+              Секрет: ${char.secret}
             </div>
           </div>
         `;
@@ -428,31 +342,8 @@
       element.classList.toggle("flipped");
     }
 
-    function openOverlay(index) {
-      const char = characters[index];
-      const overlay = document.getElementById("overlay");
-      const overlayContent = document.getElementById("overlayContent");
-      overlayContent.innerHTML = `
-        <h3>Персонаж игрока ${index + 1}</h3>
-        <span class="label">Профессия:</span> ${capitalizeFirstLetter(char.profession)}<br/>
-        <span class="label">Здоровье:</span> ${capitalizeFirstLetter(char.health)}<br/>
-        <span class="label">Фобия:</span> ${capitalizeFirstLetter(char.phobia)}<br/>
-        <span class="label">Хобби / Навыки:</span> ${capitalizeFirstLetter(char.skill)}<br/>
-        <span class="label">Инвентарь:</span> ${capitalizeFirstLetter(char.inventory)}<br/>
-        <span class="label">Качество:</span> ${capitalizeFirstLetter(char.quality)}<br/>
-        <span class="label">Биография:</span> ${capitalizeFirstLetter(char.biography)}<br/>
-        <span class="label">Секрет:</span> ${capitalizeFirstLetter(char.secret)}<br/><br/>
-        <button onclick="closeOverlay()">Закрыть карточку</button>
-      `;
-      overlay.classList.add("active");
-    }
-
-    function closeOverlay() {
-      document.getElementById("overlay").classList.remove("active");
-    }
-
     function goToMenu() {
-      window.location.href = "index.html";
+      location.reload(); // можно заменить на window.location.href = 'index.html';
     }
 
     function restartGame() {
@@ -461,27 +352,6 @@
 
     function capitalizeFirstLetter(str) {
       return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
-    }
-
-    function generateUniqueValues(arr, exclude = []) {
-      const pool = arr.filter(item => !exclude.includes(item));
-      return pool[Math.floor(Math.random() * pool.length)] || "Неизвестно";
-    }
-
-    function generateUniqueCharacter(fields) {
-      const used = [];
-      const profession = generateUniqueValues(fields.professions, used); used.push(profession);
-      const health = generateUniqueValues(
-        fields.health.filter(h => !h.includes("сексуальная") && !h.includes("репродуктивная")),
-        used
-      ); used.push(health);
-      const phobia = generateUniqueValues(fields.phobias, used); used.push(phobia);
-      const skill = generateUniqueValues(fields.skills, used); used.push(skill);
-      const inventory = generateUniqueValues(fields.inventory, used); used.push(inventory);
-      const quality = generateUniqueValues(fields.qualities, used); used.push(quality);
-      const biography = generateUniqueValues(fields.biography, used); used.push(biography);
-      const secret = generateUniqueValues(fields.secrets, used); used.push(secret);
-      return {profession, health, phobia, skill, inventory, quality, biography, secret};
     }
 
     function getRandom(arr) {
@@ -511,7 +381,27 @@
       return plan;
     }
 
-    // Удаление прелоадера после загрузки
+    function generateUniqueCharacter(fields) {
+      function pick(fieldName, options) {
+        const available = options.filter(opt => !usedValues[fieldName].includes(opt));
+        const value = available.length > 0 ? getRandom(available) : getRandom(options);
+        usedValues[fieldName].push(value);
+        return value;
+      }
+
+      const profession = pick("profession", fields.professions);
+      const health = pick("health", fields.health.filter(h => !h.includes("сексуальная") && !h.includes("репродуктивная")));
+      const phobia = pick("phobia", fields.phobias);
+      const skill = pick("skill", fields.skills);
+      const inventory = pick("inventory", fields.inventory);
+      const quality = pick("quality", fields.qualities);
+      const biography = pick("biography", fields.biography);
+      const secret = pick("secret", fields.secrets);
+
+      return { profession, health, phobia, skill, inventory, quality, biography, secret };
+    }
+
+    // Удаление прелоадера
     window.addEventListener("load", () => {
       document.querySelector("#preloader").classList.add("fadeOut");
       setTimeout(() => {
