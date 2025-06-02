@@ -139,16 +139,18 @@
       align-items: center;
       justify-content: center;
       border-radius: 12px;
-      background: rgba(34, 34, 34, 0.9);
     }
 
     .flip-card-front {
-      font-size: 0;
-      background-color: rgba(255, 255, 255, 0.05);
+      background-color: rgba(20, 20, 20, 0.9);
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
     }
 
     .flip-card-back {
       transform: rotateY(180deg);
+      background-color: rgba(30, 30, 30, 0.95);
     }
 
     .footer-buttons {
@@ -185,10 +187,12 @@
       padding: 25px;
       border-radius: 12px;
       max-width: 400px;
+      width: 90%;
       text-align: left;
       animation: expandFromCard 0.3s ease forwards;
       transform: scale(0.7);
       opacity: 0;
+      color: white;
     }
 
     @keyframes expandFromCard {
@@ -249,37 +253,115 @@
     let currentCharacterIndex = 0;
 
     const usedValues = {
-      profession: [],
-      health: [],
-      phobia: [],
-      skill: [],
-      inventory: [],
-      quality: [],
-      biography: [],
-      secret: []
+      profession: [], health: [], phobia: [], skill: [],
+      inventory: [], quality: [], biography: [], secret: []
     };
 
+    function capitalizeFirstLetter(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function showPlayerCard() {
+      document.getElementById("disasterInfo").style.display = "none";
+      document.getElementById("playerNumber").innerText = `Игрок №1`;
+      document.getElementById("playerCardContainer").style.display = "block";
+    }
+
+    function showCurrentPlayerCard() {
+      const chars = JSON.parse(localStorage.getItem("bunkerCharacters"));
+      if (currentCharacterIndex >= chars.length) return;
+      const char = chars[currentCharacterIndex];
+      let html = `<h3>Карточка игрока ${currentCharacterIndex + 1}</h3>`;
+      for (const [label, key] of Object.entries({
+        "Профессия": "profession", "Здоровье": "health", "Фобия": "phobia",
+        "Навык": "skill", "Инвентарь": "inventory", "Качество": "quality",
+        "Биография": "biography", "Секрет": "secret"
+      })) {
+        html += `<p><strong>${label}:</strong> ${capitalizeFirstLetter(char[key])}</p><br/>`;
+      }
+      html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
+      document.getElementById("characterCard").innerHTML = html;
+      document.getElementById("characterCard").style.display = "block";
+      document.getElementById("playerCardContainer").style.display = "none";
+    }
+
+    function nextPlayer() {
+      currentCharacterIndex++;
+      if (currentCharacterIndex < characters.length) {
+        document.getElementById("playerNumber").innerText = `Игрок №${currentCharacterIndex + 1}`;
+        document.getElementById("playerCardContainer").style.display = "block";
+        document.getElementById("characterCard").style.display = "none";
+      } else showAllPlayers();
+    }
+
+    function showAllPlayers() {
+      document.getElementById("characterCard").style.display = "none";
+      document.getElementById("playerCardContainer").style.display = "none";
+      document.getElementById("allCardsShown").style.display = "block";
+      const listDiv = document.getElementById("playerList");
+      listDiv.innerHTML = "";
+      characters.forEach((char, i) => {
+        const card = document.createElement("div");
+        card.className = "flip-card";
+        card.addEventListener("click", () => showPlayerOverlay(card, i));
+        card.innerHTML = `
+          <div class="flip-card-inner">
+            <div class="flip-card-front">Игрок ${i + 1}</div>
+            <div class="flip-card-back"></div>
+          </div>`;
+        listDiv.appendChild(card);
+      });
+    }
+
+    function showPlayerOverlay(cardElement, index) {
+      cardElement.classList.add("flipped");
+      setTimeout(() => {
+        const char = characters[index];
+        const overlay = document.getElementById("overlay");
+        const content = document.getElementById("overlayContent");
+        content.innerHTML = `<h3>Игрок №${index + 1}</h3>`;
+        for (const [label, key] of Object.entries({
+          "Профессия": "profession", "Здоровье": "health", "Фобия": "phobia",
+          "Навык": "skill", "Инвентарь": "inventory", "Качество": "quality",
+          "Биография": "biography", "Секрет": "secret"
+        })) {
+          content.innerHTML += `<p><strong>${label}:</strong> ${capitalizeFirstLetter(char[key])}</p><br/>`;
+        }
+        content.innerHTML += `<button onclick="closePlayerOverlay(${index})">Закрыть</button>`;
+        overlay.classList.add("active");
+      }, 400);
+    }
+
+    function closePlayerOverlay(index) {
+      const overlay = document.getElementById("overlay");
+      const content = document.getElementById("overlayContent");
+      content.style.animation = "collapseToCard 0.3s ease";
+      setTimeout(() => {
+        overlay.classList.remove("active");
+        content.style.animation = "";
+        document.querySelectorAll(".flip-card")[index].classList.remove("flipped");
+      }, 300);
+    }
+
+    function goToMenu() {
+      window.location.href = "index.html";
+    }
+
+    function restartGame() {
+      location.reload();
+    }
+
     async function startBunker() {
-      const disasterRes = await fetch('data/disasters.json');
-      const settingsRes = await fetch('data/bunker-settings.json');
-      const fieldsRes = await fetch('data/fields.json');
-      const suppliesRes = await fetch('data/supplies.json');
-
-      const disasters = await disasterRes.json();
-      const settings = await settingsRes.json();
-      const fields = await fieldsRes.json();
-      const supplies = await suppliesRes.json();
-
+      const [disasters, settings, fields, supplies] = await Promise.all([
+        fetch("data/disasters.json").then(r => r.json()),
+        fetch("data/bunker-settings.json").then(r => r.json()),
+        fetch("data/fields.json").then(r => r.json()),
+        fetch("data/supplies.json").then(r => r.json())
+      ]);
       const total = parseInt(document.getElementById("playerCount").value);
-      characters = Array.from({ length: total }, () => generateUniqueCharacter(fields));
+      characters = Array.from({length: total}, () => generateUniqueCharacter(fields));
       localStorage.setItem("bunkerCharacters", JSON.stringify(characters));
-
       document.getElementById("setup").style.display = "none";
-
-      const playersToStay = Math.ceil(total * 0.2);
-      const playersToRemove = total - playersToStay;
-      const removalPlan = calculateRemoval(playersToRemove, 6);
-
       const disaster = getRandom(disasters);
       const setting = getRandom(settings);
       const area = getRandom([
@@ -290,7 +372,9 @@
         "Площадь бункера — 200 м², двухэтажный"
       ]);
       const randomSupplies = getRandomMultiple(supplies, 2, 4).join(', ');
-
+      const playersToStay = Math.ceil(total * 0.2);
+      const playersToRemove = total - playersToStay;
+      const removalPlan = calculateRemoval(playersToRemove, 6);
       document.getElementById("disasterText").innerHTML = `<strong>Катастрофа:</strong> ${disaster.type} — ${disaster.description}`;
       document.getElementById("bunkerText").innerHTML = `
         <strong>Условия бункера:</strong><br/>
@@ -303,114 +387,26 @@
         Исключено за игру: ${playersToRemove}<br/>
         Исключения по раундам: ${removalPlan.join(', ')}
       `;
-
       document.getElementById("disasterInfo").style.display = "block";
     }
 
-    function showPlayerCard() {
-      document.getElementById("disasterInfo").style.display = "none";
-      document.getElementById("playerNumber").innerText = `Игрок №1`;
-      document.getElementById("playerCardContainer").style.display = "block";
-    }
-
-    function showCurrentPlayerCard() {
-      const chars = JSON.parse(localStorage.getItem("bunkerCharacters"));
-      if (currentCharacterIndex >= chars.length) return;
-
-      const char = chars[currentCharacterIndex];
-      let html = `<h3>Карточка игрока ${currentCharacterIndex + 1}:</h3>`;
-      html += `<span class="label">Профессия:</span> ${char.profession}<br/>`;
-      html += `<span class="label">Здоровье:</span> ${char.health}<br/>`;
-      html += `<span class="label">Фобия:</span> ${char.phobia}<br/>`;
-      html += `<span class="label">Навык:</span> ${char.skill}<br/>`;
-      html += `<span class="label">Инвентарь:</span> ${char.inventory}<br/>`;
-      html += `<span class="label">Качество:</span> ${char.quality}<br/>`;
-      html += `<span class="label">Биография:</span> ${char.biography}<br/>`;
-      html += `<span class="label">Секрет:</span> ${char.secret}<br/><br/>`;
-      html += `<button onclick="nextPlayer()">Следующий игрок</button>`;
-
-      document.getElementById("characterCard").innerHTML = html;
-      document.getElementById("characterCard").style.display = "block";
-      document.getElementById("playerCardContainer").style.display = "none";
-    }
-
-    function nextPlayer() {
-      currentCharacterIndex++;
-      if (currentCharacterIndex < characters.length) {
-        document.getElementById("playerNumber").innerText = `Игрок №${currentCharacterIndex + 1}`;
-        document.getElementById("playerCardContainer").style.display = "block";
-        document.getElementById("characterCard").style.display = "none";
-      } else {
-        showAllPlayers();
+    function generateUniqueCharacter(fields) {
+      function pick(fieldName, options) {
+        const available = options.filter(opt => !usedValues[fieldName].includes(opt));
+        const value = available.length > 0 ? getRandom(available) : getRandom(options);
+        usedValues[fieldName].push(value);
+        return value;
       }
-    }
-        function showAllPlayers() {
-      document.getElementById("characterCard").style.display = "none";
-      document.getElementById("playerCardContainer").style.display = "none";
-      document.getElementById("allCardsShown").style.display = "block";
-
-      const listDiv = document.getElementById("playerList");
-      listDiv.innerHTML = "";
-
-      characters.forEach((char, i) => {
-        const card = document.createElement("div");
-        card.className = "flip-card";
-        card.addEventListener("click", () => showPlayerOverlay(card, i));
-        card.innerHTML = `
-          <div class="flip-card-inner">
-            <div class="flip-card-front"></div>
-            <div class="flip-card-back"></div>
-          </div>
-        `;
-        listDiv.appendChild(card);
-      });
-    }
-
-    function showPlayerOverlay(cardElement, index) {
-      cardElement.classList.add("flipped");
-
-      setTimeout(() => {
-        const char = characters[index];
-        const overlay = document.getElementById("overlay");
-        const content = document.getElementById("overlayContent");
-
-        content.innerHTML = `
-          <h3>Игрок №${index + 1}</h3>
-          <p><strong>Профессия:</strong> ${char.profession}</p>
-          <p><strong>Здоровье:</strong> ${char.health}</p>
-          <p><strong>Фобия:</strong> ${char.phobia}</p>
-          <p><strong>Навык:</strong> ${char.skill}</p>
-          <p><strong>Инвентарь:</strong> ${char.inventory}</p>
-          <p><strong>Качество:</strong> ${char.quality}</p>
-          <p><strong>Биография:</strong> ${char.biography}</p>
-          <p><strong>Секрет:</strong> ${char.secret}</p>
-          <button onclick="closePlayerOverlay(${index})">Закрыть</button>
-        `;
-        overlay.classList.add("active");
-      }, 500);
-    }
-
-    function closePlayerOverlay(index) {
-      const overlay = document.getElementById("overlay");
-      const content = document.getElementById("overlayContent");
-
-      content.style.animation = "collapseToCard 0.3s ease";
-      setTimeout(() => {
-        overlay.classList.remove("active");
-        content.style.animation = "";
-        const cards = document.querySelectorAll(".flip-card");
-        if (cards[index]) {
-          cards[index].classList.remove("flipped");
-        }
-      }, 300);
-    }
-
-    function goToMenu() {
-      location.reload();
-    }
-
-    function restartGame() {
-      location.reload();
+      return {
+        profession: pick("profession", fields.professions),
+        health: pick("health", fields.health),
+        phobia: pick("phobia", fields.phobias),
+        skill: pick("skill", fields.skills),
+        inventory: pick("inventory", fields.inventory),
+        quality: pick("quality", fields.qualities),
+        biography: pick("biography", fields.biography),
+        secret: pick("secret", fields.secrets)
+      };
     }
 
     function getRandom(arr) {
@@ -419,12 +415,14 @@
 
     function getRandomMultiple(arr, min, max) {
       const count = Math.floor(Math.random() * (max - min + 1)) + min;
-      const copy = [...arr];
       const result = [];
-      for (let i = 0; i < count && copy.length > 0; i++) {
-        const item = getRandom(copy);
-        result.push(item);
-        copy.splice(copy.indexOf(item), 1);
+      const used = new Set();
+      while (result.length < count && used.size < arr.length) {
+        const item = getRandom(arr);
+        if (!used.has(item)) {
+          result.push(item);
+          used.add(item);
+        }
       }
       return result;
     }
@@ -440,27 +438,6 @@
       return plan;
     }
 
-    function generateUniqueCharacter(fields) {
-      function pick(fieldName, options) {
-        const available = options.filter(opt => !usedValues[fieldName].includes(opt));
-        const value = available.length > 0 ? getRandom(available) : getRandom(options);
-        usedValues[fieldName].push(value);
-        return value;
-      }
-
-      const profession = pick("profession", fields.professions);
-      const health = pick("health", fields.health.filter(h => !h.includes("сексуальная") && !h.includes("репродуктивная")));
-      const phobia = pick("phobia", fields.phobias);
-      const skill = pick("skill", fields.skills);
-      const inventory = pick("inventory", fields.inventory);
-      const quality = pick("quality", fields.qualities);
-      const biography = pick("biography", fields.biography);
-      const secret = pick("secret", fields.secrets);
-
-      return { profession, health, phobia, skill, inventory, quality, biography, secret };
-    }
-
-    // Удаление прелоадера
     window.addEventListener("load", () => {
       document.querySelector("#preloader").classList.add("fadeOut");
       setTimeout(() => {
@@ -471,4 +448,3 @@
   </script>
 </body>
 </html>
-  
